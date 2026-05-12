@@ -52,10 +52,13 @@ export async function submitSurvey({
     throw new SurveyFlowError("prediction_failed");
   }
 
-  // ── Step 2: Save assessment (without confidence — safe for any schema) ───
+  // ── Step 2: Save assessment ───────────────────────────────────────
+  const assessmentId = crypto.randomUUID();
+
   const { data: assessment, error: assessmentError } = await supabase
     .from("assessments")
     .insert({
+      id: assessmentId,
       child_id: childId,
       emotion_score: scores.emotion_score,
       cognitive_score: scores.cognitive_score,
@@ -71,26 +74,15 @@ export async function submitSurvey({
     .single<AssessmentResult>();
 
   if (assessmentError || !assessment) {
-    // Supabase PostgrestError properties are non-enumerable — log every way possible
-    console.error("[BrightPath] Assessment insert failed.");
-    if (assessmentError) {
-      console.error("  → raw error obj:", assessmentError);
-      console.error("  → JSON:", JSON.stringify(assessmentError));
-      console.error("  → message:", assessmentError.message);
-      console.error("  → code:", assessmentError.code);
-      console.error("  → details:", assessmentError.details);
-      console.error("  → hint:", assessmentError.hint);
-      try {
-        const keys = Object.getOwnPropertyNames(assessmentError);
-        console.error("  → own property names:", keys);
-        keys.forEach((k) => {
-          console.error(`  →  .${k}:`, (assessmentError as unknown as Record<string, unknown>)[k]);
-        });
-      } catch {
-        console.error("  → could not enumerate properties");
-      }
-    } else {
-      console.error("  → assessmentError is null/undefined but data is also null");
+    // Log the error as a single JSON blob so all fields are visible at once
+    try {
+      const errObj: Record<string, unknown> = {};
+      Object.getOwnPropertyNames(assessmentError ?? {}).forEach((k) => {
+        errObj[k] = (assessmentError as unknown as Record<string, unknown>)[k];
+      });
+      console.error("[BrightPath] Assessment insert failed:", JSON.stringify(errObj, null, 2));
+    } catch {
+      console.error("[BrightPath] Assessment insert failed (could not serialize error)");
     }
     throw new SurveyFlowError("assessment_save_failed");
   }
