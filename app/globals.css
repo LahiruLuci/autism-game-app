@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Fonts */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  /* Colors */
+  --color-primary-blue: #60a5fa;
+  --color-secondary-violet: #a78bfa;
+  --color-success-green: #86efac;
+  --color-warning-amber: #fcd34d;
+  --color-error-rose: #fda4af;
+  --color-muted: #64748b;
+  --color-foreground: #0f172a;
+  --color-background: #f8fafc;
+  --color-card: #ffffff;
+  --color-border-soft: #e2e8f0;
+
+  /* Area Colors */
+  --color-area-emotion-bg: #fce7f3; /* pink-100 */
+  --color-area-emotion-text: #be185d; /* pink-700 */
+  --color-area-emotion-border: #fbcfe8; /* pink-200 */
+
+  --color-area-cognitive-bg: #dbeafe; /* blue-100 */
+  --color-area-cognitive-text: #1d4ed8; /* blue-700 */
+  --color-area-cognitive-border: #bfdbfe; /* blue-200 */
+
+  --color-area-self-bg: #dcfce7; /* green-100 */
+  --color-area-self-text: #15803d; /* green-700 */
+  --color-area-self-border: #bbf7d0; /* green-200 */
+
+  --color-area-math-bg: #ede9fe; /* violet-100 */
+  --color-area-math-text: #6d28d9; /* violet-700 */
+  --color-area-math-border: #ddd6fe; /* violet-200 */
+
+  /* Shadows */
+  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-premium: 0 10px 15px -3px rgb(0 0 0 / 0.04), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+
+  /* Radii */
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply min-h-screen font-sans bg-background text-foreground antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Typography Utilities */
+  .display-heading {
+    @apply font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900;
+  }
+
+  .section-heading {
+    @apply font-display text-2xl sm:text-3xl font-bold text-slate-900;
+  }
+
+  .game-heading {
+    @apply font-display text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900;
+  }
+
+  .instruction-text {
+    @apply font-display text-xl sm:text-2xl font-semibold leading-8 text-slate-700;
+  }
+
+  .body-text {
+    @apply font-sans text-base leading-7 text-slate-600;
+  }
+
+  .small-text {
+    @apply font-sans text-sm leading-6 text-slate-500;
+  }
+
+  /* Card System */
+  .soft-card {
+    @apply rounded-3xl border border-border-soft bg-card p-5 sm:p-6 shadow-soft;
+  }
+
+  .premium-card {
+    @apply rounded-3xl border border-blue-100 bg-blue-50/60 p-5 sm:p-6 shadow-soft backdrop-blur-sm;
+  }
+
+  .game-card {
+    @apply rounded-3xl border border-border-soft bg-card p-5 shadow-soft transition-all duration-200 hover:-translate-y-1 hover:shadow-premium;
+  }
+
+  /* Button System */
+  .premium-button {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .button-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none bg-primary-blue text-white shadow-md shadow-blue-200 hover:bg-blue-500 hover:shadow-lg;
+  }
+
+  .button-secondary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none bg-white border border-border-soft text-slate-700 hover:bg-slate-50 hover:border-slate-300;
+  }
+
+  .button-success {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none bg-success-green text-green-900 shadow-md shadow-green-100 hover:bg-green-400;
+  }
+
+  .button-error {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none bg-error-rose text-rose-900 shadow-md shadow-rose-100 hover:bg-rose-400;
+  }
+
+  /* Game Elements */
+  .game-button {
+    @apply relative inline-flex items-center justify-center rounded-3xl p-8 text-2xl font-bold transition-all duration-200 active:scale-90 shadow-lg min-h-[80px] w-full sm:w-auto;
+  }
+
+  .survey-option {
+    @apply relative flex items-center gap-4 rounded-2xl border-2 border-slate-100 bg-white p-4 transition-all duration-200 cursor-pointer hover:border-blue-200 hover:bg-blue-50/50;
+  }
+
+  .survey-option.selected {
+    @apply border-primary-blue bg-blue-50 ring-2 ring-primary-blue ring-offset-2;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider;
+  }
+
+  .badge-level {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider bg-violet-100 text-violet-700 border border-violet-200;
+  }
+
+  .badge-area {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200;
+  }
+
+  /* Progress Bar */
+  .progress-container {
+    @apply h-3 w-full rounded-full bg-slate-100 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-500 transition-all duration-500 ease-out;
+  }
+}
+
+/* Custom layout wrapper */
+.layout-container {
+  @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12;
 }
