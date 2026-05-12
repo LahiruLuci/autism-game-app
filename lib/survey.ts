@@ -53,12 +53,10 @@ export async function submitSurvey({
   }
 
   // ── Step 2: Save assessment ───────────────────────────────────────
-  const assessmentId = crypto.randomUUID();
-
+  // id is GENERATED ALWAYS AS IDENTITY — do NOT provide it
   const { data: assessment, error: assessmentError } = await supabase
     .from("assessments")
     .insert({
-      id: assessmentId,
       child_id: childId,
       emotion_score: scores.emotion_score,
       cognitive_score: scores.cognitive_score,
