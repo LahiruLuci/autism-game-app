@@ -58,6 +58,8 @@ export default function SurveyPage() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [savingStage, setSavingStage] = useState<"calculating" | "saving" | null>(null);
+
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -125,7 +127,7 @@ export default function SurveyPage() {
 
   async function handleNext() {
     if (!currentQuestion || answers[currentQuestion.id] === undefined) {
-      toast.error("Please answer all questions before continuing.");
+      toast.error("Please answer this question before continuing.");
       return;
     }
 
@@ -135,11 +137,13 @@ export default function SurveyPage() {
     }
 
     if (answeredCount !== questions.length) {
-      toast.error("Please answer all questions before continuing.");
+      toast.error("Please answer all questions before submitting.");
       return;
     }
 
     setIsSaving(true);
+    setErrorMessage("");
+    setSavingStage("calculating");
 
     try {
       await submitSurvey({
@@ -147,14 +151,22 @@ export default function SurveyPage() {
         childId: params.childId,
         questions,
       });
-      toast.success("Survey completed.");
+      setSavingStage("saving");
+      toast.success("Survey completed! Great work!");
       router.push(`/assessment-result/${params.childId}`);
       router.refresh();
-    } catch {
-      toast.error("We could not save your responses. Please try again.");
-      setErrorMessage("We could not save your responses. Please try again.");
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message === "prediction_failed"
+          ? "We could not calculate the support level right now. Please try again."
+          : err instanceof Error && err.message === "assessment_save_failed"
+            ? "We could not save your survey result. Please try again."
+            : "Something went wrong. Please try again.";
+      toast.error(message);
+      setErrorMessage(message);
     } finally {
       setIsSaving(false);
+      setSavingStage(null);
     }
   }
 
@@ -201,8 +213,21 @@ export default function SurveyPage() {
               question={currentQuestion}
               selectedScore={answers[currentQuestion.id]}
             />
+
+            {/* Staged saving indicator */}
+            {isSaving && savingStage && (
+              <div className="rounded-2xl bg-blue-50 border border-blue-200 px-5 py-4 flex items-center gap-4">
+                <div className="w-5 h-5 rounded-full border-2 border-blue-400 border-t-transparent animate-spin flex-shrink-0" />
+                <p className="text-sm font-bold text-blue-700">
+                  {savingStage === "calculating"
+                    ? "Calculating support level..."
+                    : "Saving survey result..."}
+                </p>
+              </div>
+            )}
+
             <SurveyNavigation
-              canGoBack={currentIndex > 0}
+              canGoBack={currentIndex > 0 && !isSaving}
               isLastQuestion={isLastQuestion}
               isSaving={isSaving}
               onBack={handleBack}
