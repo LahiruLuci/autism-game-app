@@ -53,12 +53,9 @@ export async function submitSurvey({
   }
 
   // ── Step 2: Save assessment (without confidence — safe for any schema) ───
-  const assessmentId = crypto.randomUUID();
-
   const { data: assessment, error: assessmentError } = await supabase
     .from("assessments")
     .insert({
-      id: assessmentId,
       child_id: childId,
       emotion_score: scores.emotion_score,
       cognitive_score: scores.cognitive_score,
@@ -115,8 +112,9 @@ export async function submitSurvey({
   }
 
   // ── Step 4: Save individual survey responses ─────────────────────────────
+  // Note: id is int8 serial — do not provide it; assessment_id requires the
+  // column to be added via: ALTER TABLE survey_responses ADD COLUMN assessment_id uuid;
   const responseRows = questions.map((question) => ({
-    id: crypto.randomUUID(),
     assessment_id: assessment.id,
     child_id: childId,
     question_id: question.id,
