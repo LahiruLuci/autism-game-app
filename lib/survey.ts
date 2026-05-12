@@ -74,12 +74,27 @@ export async function submitSurvey({
     .single<AssessmentResult>();
 
   if (assessmentError || !assessment) {
-    console.error("[BrightPath] Assessment save failed:", {
-      code: assessmentError?.code,
-      message: assessmentError?.message,
-      details: assessmentError?.details,
-      hint: assessmentError?.hint,
-    });
+    // Supabase PostgrestError properties are non-enumerable — log every way possible
+    console.error("[BrightPath] Assessment insert failed.");
+    if (assessmentError) {
+      console.error("  → raw error obj:", assessmentError);
+      console.error("  → JSON:", JSON.stringify(assessmentError));
+      console.error("  → message:", assessmentError.message);
+      console.error("  → code:", assessmentError.code);
+      console.error("  → details:", assessmentError.details);
+      console.error("  → hint:", assessmentError.hint);
+      try {
+        const keys = Object.getOwnPropertyNames(assessmentError);
+        console.error("  → own property names:", keys);
+        keys.forEach((k) => {
+          console.error(`  →  .${k}:`, (assessmentError as unknown as Record<string, unknown>)[k]);
+        });
+      } catch {
+        console.error("  → could not enumerate properties");
+      }
+    } else {
+      console.error("  → assessmentError is null/undefined but data is also null");
+    }
     throw new SurveyFlowError("assessment_save_failed");
   }
 
