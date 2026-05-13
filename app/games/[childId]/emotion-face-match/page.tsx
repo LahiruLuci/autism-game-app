@@ -2,7 +2,7 @@
 
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Backend Helpers
 import { getChildForCurrentParent } from "@/lib/children";
@@ -12,8 +12,9 @@ import { saveGameScore } from "@/lib/game-scores";
 // Game Logic & Config
 import { EMOTION_FACE_MATCH_CONFIG } from "@/lib/games/emotion-face-match/config";
 import { getEmotionFaceMatchLevel } from "@/lib/games/emotion-face-match/levels";
-import { generateEmotionQuestion } from "@/lib/games/emotion-face-match/helpers";
+import { getQuestionsForEmotionLevel } from "@/lib/games/emotion-face-match/questions";
 import { calculateEmotionFaceMatchScore } from "@/lib/games/emotion-face-match/scoring";
+import { EMOTIONS } from "@/lib/games/emotion-face-match/emotions";
 
 // UI Components
 import { CalmBackground } from "@/components/ui/CalmBackground";
@@ -21,7 +22,7 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { EmotionGameHeader } from "@/components/games/emotion-face-match/EmotionGameHeader";
 import { EmotionProgressBar } from "@/components/games/emotion-face-match/EmotionProgressBar";
 import { EmotionPromptCard } from "@/components/games/emotion-face-match/EmotionPromptCard";
-import { EmotionFeedback } from "@/components/games/emotion-face-match/EmotionFeedback";
+import { EmotionSupportiveFeedback } from "@/components/games/emotion-face-match/EmotionSupportiveFeedback";
 import { EmotionAnswerGrid } from "@/components/games/emotion-face-match/EmotionAnswerGrid";
 
 // Types
@@ -44,6 +45,7 @@ export default function EmotionFaceMatchGamePage() {
   const [gameRecord, setGameRecord] = useState<Game | null>(null);
   
   // 3. Gameplay State
+  const [questions, setQuestions] = useState<EmotionQuestion[]>([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [question, setQuestion] = useState<EmotionQuestion | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "info" | null; message: string }>({ type: null, message: "" });
@@ -62,8 +64,13 @@ export default function EmotionFaceMatchGamePage() {
           getChildForCurrentParent(params.childId),
           getGameBySlugAndLevel(EMOTION_FACE_MATCH_CONFIG.gameSlug, level),
         ]);
+        
+        // Load curated questions for this level
+        const levelQuestions = getQuestionsForEmotionLevel(level);
+        
         setChild(c.child);
         setGameRecord(g);
+        setQuestions(levelQuestions);
         setGameState("start");
       } catch (err) {
         console.error("[BrightPath] Initialization failed:", err);
@@ -81,22 +88,26 @@ export default function EmotionFaceMatchGamePage() {
   };
 
   const nextRound = useCallback((roundNumber: number) => {
-    const nextQuestion = generateEmotionQuestion(levelConfig);
-    setQuestion(nextQuestion);
+    // Select question by round index (0-indexed)
+    const nextQ = questions[roundNumber - 1];
+    setQuestion(nextQ || null);
     setFeedback({ type: null, message: "" });
-  }, [levelConfig]);
+  }, [questions]);
 
   const handleAnswer = async (selectedLabel: string) => {
     if (feedback.message || !question) return;
 
     setAttempts(prev => prev + 1);
 
-    if (selectedLabel === question.targetEmotion.label) {
+    // Normalize label for comparison if needed, but our buttons use emotion.label
+    const targetEmotionData = EMOTIONS[question.correctAnswer];
+
+    if (selectedLabel === targetEmotionData.label) {
       // Correct Path
       setCorrectCount(prev => prev + 1);
       setFeedback({ 
         type: "success", 
-        message: question.targetEmotion.supportiveText 
+        message: targetEmotionData.supportiveText 
       });
       
       setTimeout(() => {
@@ -107,18 +118,18 @@ export default function EmotionFaceMatchGamePage() {
         } else {
           finishGame(correctCount + 1, wrongCount, attempts + 1);
         }
-      }, 1500);
+      }, 1800);
     } else {
       // Wrong Path (Supportive)
       setWrongCount(prev => prev + 1);
       setFeedback({ 
         type: "info", 
-        message: "Good try! Let's practice again. 💛" 
+        message: "Good try! Let's practice this feeling again. 💛" 
       });
       
       setTimeout(() => {
         setFeedback({ type: null, message: "" });
-      }, 1500);
+      }, 1800);
     }
   };
 
@@ -178,7 +189,7 @@ export default function EmotionFaceMatchGamePage() {
             </span>
             <h1 className="font-display text-3xl font-bold text-slate-900 leading-tight">Emotion Face Match</h1>
             <p className="text-slate-500 font-medium leading-relaxed">
-              Hello {child?.child_name}! Can you help us find the face that matches the emotion?
+              Hello {child?.child_name}! Let's learn about emotions together with {levelConfig.rounds} fun activities.
             </p>
           </div>
           <div className="flex flex-col gap-3">
@@ -192,7 +203,7 @@ export default function EmotionFaceMatchGamePage() {
               onClick={() => router.push(`/games/${params.childId}`)}
               className="inline-flex items-center justify-center py-5 rounded-full bg-white/80 text-slate-600 text-sm font-bold hover:bg-white transition-all"
             >
-              Not Now
+              Back to Games
             </button>
           </div>
         </motion.div>
@@ -236,23 +247,26 @@ export default function EmotionFaceMatchGamePage() {
         totalRounds={levelConfig.rounds} 
       />
 
-      <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-12">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-8 sm:space-y-12">
         {question && (
           <>
-            <div className="space-y-8 flex flex-col items-center">
-              <EmotionFeedback message={feedback.message} type={feedback.type} />
-              <EmotionPromptCard emotion={question.targetEmotion} feedbackVisible={!!feedback.message} />
+            <div className="space-y-6 flex flex-col items-center w-full">
+              <EmotionSupportiveFeedback 
+                type={feedback.type === "success" ? "correct" : feedback.type === "info" ? "incorrect" : null} 
+                visible={!!feedback.message} 
+              />
+              <EmotionPromptCard question={question} feedbackVisible={!!feedback.message} />
             </div>
 
             <div className="w-full space-y-8">
               <div className="text-center">
                 <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
-                  Which emotion is this?
+                  {question.instruction}
                 </h2>
               </div>
 
               <EmotionAnswerGrid 
-                options={question.options} 
+                options={question.options.map(id => EMOTIONS[id])} 
                 onAnswer={handleAnswer} 
                 disabled={!!feedback.message} 
                 level={level} 

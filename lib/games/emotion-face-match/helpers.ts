@@ -2,13 +2,17 @@ import { EmotionId, EmotionQuestion, EmotionLevelConfig } from "@/types/games/em
 import { EMOTIONS, getEmotionsByIds } from "./emotions";
 
 export function generateEmotionQuestion(levelConfig: EmotionLevelConfig): EmotionQuestion {
-  const availableEmotions = getEmotionsByIds(levelConfig.emotions);
-  const targetEmotion = availableEmotions[Math.floor(Math.random() * availableEmotions.length)];
+  const availableEmotionIds = levelConfig.emotions;
+  const targetEmotionId = availableEmotionIds[Math.floor(Math.random() * availableEmotionIds.length)];
   
-  // For this specific game, we usually show all available emotions as options
   return {
-    targetEmotion,
-    options: availableEmotions
+    id: `gen-${Math.random().toString(36).substr(2, 9)}`,
+    emotionId: targetEmotionId,
+    promptType: "face",
+    visual: EMOTIONS[targetEmotionId].emoji,
+    correctAnswer: targetEmotionId,
+    options: availableEmotionIds,
+    instruction: "How does this face feel?"
   };
 }
 

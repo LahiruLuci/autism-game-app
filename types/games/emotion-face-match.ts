@@ -37,7 +37,15 @@ export interface EmotionGameResult {
   performanceLevel: "Excellent" | "Great Progress" | "Good Practice" | "Keep Practicing";
 }
 
+export type PromptType = "face" | "situation";
+
 export interface EmotionQuestion {
-  targetEmotion: Emotion;
-  options: Emotion[];
+  id: string;
+  emotionId: EmotionId;
+  promptType: PromptType;
+  visual?: string;
+  situation?: string;
+  correctAnswer: EmotionId;
+  options: EmotionId[];
+  instruction: string;
 }
