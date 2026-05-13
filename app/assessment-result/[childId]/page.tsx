@@ -5,8 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getChildForCurrentParent } from "@/lib/children";
 import { getLatestAssessmentForCurrentParent } from "@/lib/survey";
+import {
+  getAreaLabel,
+  isAreaRecommendationsEnabled,
+} from "@/lib/area-recommendations";
 import type { ChildProfile } from "@/types/child";
 import type { AssessmentResult } from "@/types/survey";
+
 
 // ─── Area score card ────────────────────────────────────────────────────────
 
@@ -114,8 +119,9 @@ export default function AssessmentResultPage() {
 
   const lvl = assessment ? levelConfig(assessment.predicted_level) : null;
 
-  // Max scores — 5 questions per area × 4 max score = 20 per area
-  const MAX_AREA = 20;
+  // Max scores — 8 questions per area × 4 max score = 32 per area
+  const MAX_AREA = 32;
+
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/30 pb-28 md:pb-12">
@@ -190,6 +196,66 @@ export default function AssessmentResultPage() {
                 </div>
               </div>
             </div>
+
+            {/* ── Area recommendations (Optional) ── */}
+            {isAreaRecommendationsEnabled() &&
+              assessment.main_support_area &&
+              assessment.strongest_area && (
+                <div className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50/50 to-white p-6 sm:p-8 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-500 flex-shrink-0 shadow-inner">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+                        Personalized Area Recommendation
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="space-y-1">
+                          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                            Learning Focus
+                          </p>
+                          <p className="text-sm font-bold text-blue-700">
+                            {getAreaLabel(assessment.main_support_area)}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                            Stronger Area
+                          </p>
+                          <p className="text-sm font-bold text-green-700">
+                            {getAreaLabel(assessment.strongest_area)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                        <div className="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Emotion</p>
+                          <p className="text-sm font-bold text-slate-700">Lvl {assessment.emotion_level}</p>
+                        </div>
+                        <div className="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Cognitive</p>
+                          <p className="text-sm font-bold text-slate-700">Lvl {assessment.cognitive_level}</p>
+                        </div>
+                        <div className="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Self-awareness</p>
+                          <p className="text-sm font-bold text-slate-700">Lvl {assessment.self_awareness_level}</p>
+                        </div>
+                        <div className="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Math</p>
+                          <p className="text-sm font-bold text-slate-700">Lvl {assessment.math_level}</p>
+                        </div>
+                      </div>
+                      <p className="text-slate-600 text-sm font-medium leading-relaxed italic">
+                        "Based on the survey, {getAreaLabel(assessment.main_support_area)} may benefit from more guided practice, while {getAreaLabel(assessment.strongest_area)} appears to be a stronger area. We suggest starting with foundational activities in the support area and continuing suitable activities in the stronger area."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
 
             {/* ── Area scores ── */}
             <div>

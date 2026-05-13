@@ -4,49 +4,55 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LoadingState } from "@/components/ui/LoadingState";
-import {
-  getChildForCurrentParent,
-  getLatestAssessmentForChild,
-  type LatestAssessment,
-} from "@/lib/children";
+import { getChildForCurrentParent } from "@/lib/children";
+import { getLatestAssessmentForCurrentParent } from "@/lib/survey";
+import { isAreaRecommendationsEnabled } from "@/lib/area-recommendations";
+import { ChildProfileHero } from "@/components/children/ChildProfileHero";
+import { AssessmentSummaryCard } from "@/components/children/AssessmentSummaryCard";
+import { GeneralRecommendationCard } from "@/components/children/GeneralRecommendationCard";
+import { AreaRecommendationCard } from "@/components/children/AreaRecommendationCard";
+import { AreaLevelGrid } from "@/components/children/AreaLevelGrid";
+import { QuickLearningStatus } from "@/components/children/QuickLearningStatus";
+import { ChildNotesCard } from "@/components/children/ChildNotesCard";
+import { ChildActionPanel } from "@/components/children/ChildActionPanel";
+
 import type { ChildProfile } from "@/types/child";
+import type { AssessmentResult } from "@/types/survey";
 
 export default function ChildDetailsPage() {
   const router = useRouter();
   const params = useParams<{ childId: string }>();
+  
   const [child, setChild] = useState<ChildProfile | null>(null);
-  const [assessment, setAssessment] = useState<LatestAssessment | null>(null);
+  const [assessment, setAssessment] = useState<AssessmentResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const areaRecommendationsEnabled = isAreaRecommendationsEnabled();
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadChild() {
+    async function loadData() {
       try {
-        const result = await getChildForCurrentParent(params.childId);
-        const latestAssessment = await getLatestAssessmentForChild(
-          result.child.id,
-        );
+        const [childResult, latestAssessment] = await Promise.all([
+          getChildForCurrentParent(params.childId),
+          getLatestAssessmentForCurrentParent(params.childId).catch(() => null),
+        ]);
 
         if (isMounted) {
-          setChild(result.child);
+          setChild(childResult.child);
           setAssessment(latestAssessment);
         }
       } catch (error) {
-        const message =
-          error instanceof Error && error.message === "not_authenticated"
-            ? "Please login again."
-            : "This child profile could not be found.";
-
+        if (!isMounted) return;
+        
         if (error instanceof Error && error.message === "not_authenticated") {
           router.replace("/login");
           return;
         }
 
-        if (isMounted) {
-          setErrorMessage(message);
-        }
+        setErrorMessage("This child profile could not be found or you don't have access.");
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -54,108 +60,133 @@ export default function ChildDetailsPage() {
       }
     }
 
-    loadChild();
-
-    return () => {
-      isMounted = false;
-    };
+    loadData();
+    return () => { isMounted = false; };
   }, [params.childId, router]);
 
-  const supportLevel = assessment?.predicted_level ?? null;
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/40 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <LoadingState message="Loading child profile..." />
+        </div>
+      </main>
+    );
+  }
+
+  if (errorMessage || !child) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/40 flex items-center justify-center p-4">
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="w-20 h-20 rounded-[2rem] bg-rose-50 border border-rose-100 flex items-center justify-center text-3xl mx-auto shadow-sm">
+            ⚠️
+          </div>
+          <div className="space-y-2">
+            <h1 className="font-display text-2xl font-bold text-slate-900">Oops! Profile not found</h1>
+            <p className="text-slate-500 font-medium leading-relaxed">{errorMessage}</p>
+          </div>
+          <Link
+            href="/children"
+            className="inline-flex items-center justify-center px-8 py-3 rounded-2xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all duration-300"
+          >
+            Back to Children
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // Determine if we should show area-wise mode
+  // We show it if enabled AND the assessment has the required fields
+  const showAreaWiseMode = 
+    areaRecommendationsEnabled && 
+    assessment && 
+    assessment.main_support_area && 
+    assessment.strongest_area;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-violet-50 px-4 py-8 sm:py-10">
-      <section className="mx-auto w-full max-w-4xl">
-        <Link
-          className="mb-6 inline-flex text-sm font-semibold text-slate-500 transition hover:text-primary-blue"
-          href="/children"
-        >
-          Back to child profiles
-        </Link>
-
-        <div className="rounded-3xl border border-border-soft bg-white p-6 shadow-premium sm:p-8">
-          {isLoading ? <LoadingState message="Loading child details..." /> : null}
-
-          {!isLoading && errorMessage ? (
-            <div
-              className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-center text-sm font-semibold text-rose-700"
-              role="alert"
-            >
-              {errorMessage}
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        
+        {/* Navigation */}
+        <nav className="mb-8">
+          <Link
+            href="/children"
+            className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors group"
+          >
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:border-blue-100 group-hover:bg-blue-50 transition-all">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
             </div>
-          ) : null}
+            Back to child profiles
+          </Link>
+        </nav>
 
-          {!isLoading && child && !errorMessage ? (
-            <>
-              <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <span className="mb-4 inline-flex rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-xs font-bold uppercase text-blue-600">
-                    Child Profile
-                  </span>
-                  <h1 className="display-heading mb-3">{child.child_name}</h1>
-                  <p className="body-text">
-                    Review the profile and continue with supportive activities.
-                  </p>
-                </div>
-                <span className="badge-level">Age {child.age}</span>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Profile & Assessment (Large) */}
+          <div className="lg:col-span-8 space-y-8">
+            <ChildProfileHero child={child} assessment={assessment} />
 
-              <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-3xl bg-blue-50 p-5">
-                  <span className="block text-xs font-bold uppercase text-blue-600">
-                    Age
-                  </span>
-                  <p className="mt-2 text-lg font-bold text-slate-900">
-                    {child.age}
-                  </p>
-                </div>
-                <div className="rounded-3xl bg-green-50 p-5">
-                  <span className="block text-xs font-bold uppercase text-green-700">
-                    Gender
-                  </span>
-                  <p className="mt-2 text-lg font-bold text-slate-900">
-                    {child.gender || "Not selected"}
-                  </p>
-                </div>
-                <div className="rounded-3xl bg-violet-50 p-5">
-                  <span className="block text-xs font-bold uppercase text-violet-700">
-                    Support Level
-                  </span>
-                  <p className="mt-2 text-lg font-bold text-slate-900">
-                    {supportLevel ? `Level ${supportLevel}` : "Survey not completed yet."}
-                  </p>
-                </div>
-              </div>
+            <AssessmentSummaryCard assessment={assessment} childId={child.id} />
 
-              <div className="mb-8 rounded-3xl border border-border-soft bg-slate-50 p-5">
-                <h2 className="mb-2 font-display text-xl font-bold text-slate-900">
-                  Notes
-                </h2>
-                <p className="body-text">
-                  {child.notes || "No notes added yet."}
-                </p>
-              </div>
+            {assessment && (
+              <section className="space-y-8">
+                {showAreaWiseMode ? (
+                  <>
+                    <AreaRecommendationCard assessment={assessment} />
+                    <div className="space-y-4">
+                      <h2 className="font-display text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-xl bg-violet-100 flex items-center justify-center text-sm">📊</span>
+                        Area Level Breakdown
+                      </h2>
+                      <AreaLevelGrid assessment={assessment} />
+                    </div>
+                  </>
+                ) : (
+                  <GeneralRecommendationCard assessment={assessment} childId={child.id} />
+                )}
+              </section>
+            )}
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <Link
-                  className="button-primary min-h-12 w-full"
-                  href={`/survey/${child.id}`}
-                >
-                  {assessment ? "Retake Survey" : "Start Survey"}
-                </Link>
-                {assessment ? (
-                  <Link
-                    className="button-secondary inline-flex min-h-12 w-full items-center justify-center"
-                    href={`/games/${child.id}`}
-                  >
-                    Continue to Games
-                  </Link>
-                ) : null}
+            <ChildNotesCard notes={child.notes} />
+          </div>
+
+          {/* Right Column: Quick Stats & Actions (Small) */}
+          <div className="lg:col-span-4 space-y-8">
+            <section className="space-y-4">
+              <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-sm">⚡</span>
+                Quick Status
+              </h2>
+              <QuickLearningStatus assessment={assessment} />
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center text-sm">🚀</span>
+                Next Actions
+              </h2>
+              <ChildActionPanel childId={child.id} hasAssessment={!!assessment} />
+            </section>
+
+            {/* Supportive Help Card */}
+            <div className="rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-xl shadow-slate-200">
+              <p className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-3">Supportive Tip</p>
+              <h3 className="font-display text-xl font-bold mb-3 leading-tight">Consistency is key to development</h3>
+              <p className="text-slate-300 text-sm font-medium leading-relaxed mb-6">
+                Playing supportive games for just 15 minutes a day can help reinforce foundational skills and build confidence.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-lg">💡</div>
+                <span className="text-xs font-bold text-slate-400">Try one game from each area!</span>
               </div>
-            </>
-          ) : null}
+            </div>
+          </div>
+
         </div>
-      </section>
+      </div>
     </main>
   );
 }

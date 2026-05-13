@@ -2,6 +2,8 @@ import { predictSupportLevel } from "./api";
 import { getChildForCurrentParent } from "./children";
 import { supabase } from "./supabase";
 import { calculateSurveyScores } from "./survey-scoring";
+import { calculateAreaRecommendations } from "./area-recommendations";
+
 import type {
   AssessmentResult,
   SurveyAnswers,
@@ -43,6 +45,13 @@ export async function submitSurvey({
 
   const scores = calculateSurveyScores(questions, answers);
 
+  const areaRecommendations = calculateAreaRecommendations({
+    emotion_score: scores.emotion_score,
+    cognitive_score: scores.cognitive_score,
+    self_awareness_score: scores.self_awareness_score,
+    math_score: scores.math_score,
+  });
+
   // ── Step 1: Call ML API ──────────────────────────────────────────────────
   let prediction: Awaited<ReturnType<typeof predictSupportLevel>>;
   try {
@@ -65,11 +74,18 @@ export async function submitSurvey({
       total_score: scores.total_score,
       predicted_level: prediction.predicted_level,
       recommendation: prediction.recommendation,
+      emotion_level: areaRecommendations.emotion_level,
+      cognitive_level: areaRecommendations.cognitive_level,
+      self_awareness_level: areaRecommendations.self_awareness_level,
+      math_level: areaRecommendations.math_level,
+      main_support_area: areaRecommendations.main_support_area,
+      strongest_area: areaRecommendations.strongest_area,
     })
     .select(
-      "id, child_id, emotion_score, cognitive_score, self_awareness_score, math_score, total_score, predicted_level, recommendation, created_at",
+      "id, child_id, emotion_score, cognitive_score, self_awareness_score, math_score, total_score, predicted_level, recommendation, emotion_level, cognitive_level, self_awareness_level, math_level, main_support_area, strongest_area, created_at",
     )
     .single<AssessmentResult>();
+
 
   if (assessmentError || !assessment) {
     // Log the error as a single JSON blob so all fields are visible at once
@@ -132,9 +148,10 @@ export async function getLatestAssessmentForCurrentParent(childId: string) {
   const { data, error } = await supabase
     .from("assessments")
     .select(
-      "id, child_id, emotion_score, cognitive_score, self_awareness_score, math_score, total_score, predicted_level, recommendation, created_at",
+      "id, child_id, emotion_score, cognitive_score, self_awareness_score, math_score, total_score, predicted_level, recommendation, emotion_level, cognitive_level, self_awareness_level, math_level, main_support_area, strongest_area, created_at",
     )
     .eq("child_id", childId)
+
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle<AssessmentResult>();

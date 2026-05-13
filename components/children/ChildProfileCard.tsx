@@ -39,42 +39,45 @@ export function ChildProfileCard({ child, assessment }: ChildProfileCardProps) {
     : null;
 
   return (
-    <article className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col gap-5">
-      {/* Top: Avatar + Name + Age */}
-      <div className="flex items-center gap-4">
-        <div className={`w-14 h-14 rounded-2xl ${avatarColor} flex items-center justify-center font-display text-2xl font-bold flex-shrink-0 shadow-inner`}>
-          {initial}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-display text-xl font-bold text-slate-900 truncate">{child.child_name}</h2>
-          <p className="text-xs font-semibold text-slate-400 mt-0.5">Added {formatDate(child.created_at)}</p>
-        </div>
-        <span className="flex-shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">
-          Age {child.age}
-        </span>
-      </div>
-
-      {/* Middle: Info grid */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-slate-50 px-4 py-3">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Gender</span>
-          <span className="text-sm font-bold text-slate-700">{child.gender || "Not specified"}</span>
-        </div>
-        <div className={`rounded-2xl px-4 py-3 ${hasAssessment ? "bg-green-50" : "bg-amber-50"}`}>
-          <span className={`block text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAssessment ? "text-green-600" : "text-amber-600"}`}>Survey</span>
-          <span className="text-sm font-bold text-slate-700">{hasAssessment ? "Completed ✓" : "Pending"}</span>
-        </div>
-        {levelLabel && (
-          <div className="rounded-2xl bg-violet-50 px-4 py-3">
-            <span className="block text-[10px] font-bold uppercase tracking-wider text-violet-500 mb-1">Support Level</span>
-            <span className="text-sm font-bold text-slate-700">{levelLabel}</span>
+    <article className="group rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col gap-5">
+      {/* Clickable Area: Avatar + Name + Grid */}
+      <Link href={`/children/${child.id}`} className="block space-y-5 cursor-pointer">
+        {/* Top: Avatar + Name + Age */}
+        <div className="flex items-center gap-4">
+          <div className={`w-14 h-14 rounded-2xl ${avatarColor} flex items-center justify-center font-display text-2xl font-bold flex-shrink-0 shadow-inner transition-transform duration-300 group-hover:scale-105`}>
+            {initial}
           </div>
-        )}
-        <div className="rounded-2xl bg-blue-50 px-4 py-3">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Next Step</span>
-          <span className="text-sm font-bold text-slate-700">{hasAssessment ? "Play Games" : "Take Survey"}</span>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-display text-xl font-bold text-slate-900 truncate transition-colors group-hover:text-blue-600">{child.child_name}</h2>
+            <p className="text-xs font-semibold text-slate-400 mt-0.5">Added {formatDate(child.created_at)}</p>
+          </div>
+          <span className="flex-shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">
+            Age {child.age}
+          </span>
         </div>
-      </div>
+
+        {/* Middle: Info grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-slate-50 px-4 py-3">
+            <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Gender</span>
+            <span className="text-sm font-bold text-slate-700">{child.gender || "Not specified"}</span>
+          </div>
+          <div className={`rounded-2xl px-4 py-3 ${hasAssessment ? "bg-green-50" : "bg-amber-50"}`}>
+            <span className={`block text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAssessment ? "text-green-600" : "text-amber-600"}`}>Survey</span>
+            <span className="text-sm font-bold text-slate-700">{hasAssessment ? "Completed ✓" : "Pending"}</span>
+          </div>
+          {levelLabel && (
+            <div className="rounded-2xl bg-violet-50 px-4 py-3">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-violet-500 mb-1">Support Level</span>
+              <span className="text-sm font-bold text-slate-700">{levelLabel}</span>
+            </div>
+          )}
+          <div className="rounded-2xl bg-blue-50 px-4 py-3">
+            <span className="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Next Step</span>
+            <span className="text-sm font-bold text-slate-700">{hasAssessment ? "Play Games" : "Take Survey"}</span>
+          </div>
+        </div>
+      </Link>
 
       {/* Bottom: Action button */}
       <Link

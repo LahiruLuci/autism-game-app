@@ -40,4 +40,11 @@ export type AssessmentResult = SurveyScores & {
   predicted_level: number;
   recommendation: string;
   created_at: string;
+  confidence?: number | null;
+  emotion_level?: number | null;
+  cognitive_level?: number | null;
+  self_awareness_level?: number | null;
+  math_level?: number | null;
+  main_support_area?: SurveyArea | null;
+  strongest_area?: SurveyArea | null;
 };
