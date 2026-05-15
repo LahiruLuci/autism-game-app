@@ -154,6 +154,22 @@
   }
 }
 
+/* 3D Transform Utilities for Memory Card Flip */
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
 /* Custom layout wrapper */
 .layout-container {
   @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12;

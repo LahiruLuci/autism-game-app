@@ -17,7 +17,7 @@ const config: Config = {
           blue: "#60A5FA",
         },
         secondary: {
-           violet: "#A78BFA",
+          violet: "#A78BFA",
         },
         success: {
           green: "#86EFAC",

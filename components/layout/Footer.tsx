@@ -9,7 +9,7 @@ export default function Footer() {
           <Logo />
           <p className="text-sm text-slate-500 font-medium">Supportive learning activities for children.</p>
         </div>
-        
+
         <div className="text-center lg:text-right max-w-md">
           <p className="text-xs text-slate-400 leading-relaxed mb-6 font-medium">
             This platform supports learning and progress tracking and is not a medical diagnosis tool.

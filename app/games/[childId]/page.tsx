@@ -3,17 +3,20 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+
+// Backend Helpers
 import { getChildForCurrentParent } from "@/lib/children";
 import { getGamesForChild } from "@/lib/games";
-import { LoadingState } from "@/components/ui/LoadingState";
-import { CalmBackground } from "@/components/ui/CalmBackground";
-import { GamesHero } from "@/components/games/GamesHero";
-import { ChildProgressSummary } from "@/components/games/ChildProgressSummary";
-import { EmotionJourneySection } from "@/components/games/EmotionJourneySection";
-import { LockedFutureAreas } from "@/components/games/LockedFutureAreas";
-import { CalmFooterMessage } from "@/components/games/CalmFooterMessage";
 import { isGameDevModeEnabled } from "@/lib/game-unlock";
 
+// UI Components
+import { LoadingState } from "@/components/ui/LoadingState";
+import { JourneyBackground } from "@/components/games/redesign/JourneyBackground";
+import { LearningJourneyHero } from "@/components/games/redesign/LearningJourneyHero";
+import { JourneyTimeline } from "@/components/games/redesign/JourneyTimeline";
+
+// Types
 import type { ChildProfile } from "@/types/child";
 import type { AssessmentResult } from "@/types/survey";
 import type { GameWithUnlockState } from "@/types/game";
@@ -64,7 +67,7 @@ export default function GamesPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <LoadingState message="Creating your calm learning space..." />
+        <LoadingState message="Creating your calm learning journey..." />
       </main>
     );
   }
@@ -72,9 +75,13 @@ export default function GamesPage() {
   // Handle case where no assessment exists and dev mode is false
   if (!assessment && !devMode) {
     return (
-      <main className="min-h-screen relative flex items-center justify-center p-4">
-        <CalmBackground />
-        <div className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-[3rem] p-10 shadow-2xl shadow-blue-900/5 border border-white/80 text-center space-y-8">
+      <main className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+        <JourneyBackground />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-[3rem] p-10 shadow-2xl shadow-blue-900/5 border border-white/80 text-center space-y-8 relative z-10"
+        >
           <div className="w-24 h-24 rounded-[2.5rem] bg-white border border-slate-100 flex items-center justify-center text-4xl mx-auto shadow-sm">📋</div>
           <div className="space-y-3">
             <h1 className="font-display text-3xl font-bold text-slate-900 leading-tight">Survey Required</h1>
@@ -96,50 +103,53 @@ export default function GamesPage() {
               Back to Profile
             </Link>
           </div>
-        </div>
+        </motion.div>
       </main>
     );
   }
 
-  // Filter only Emotion games for the primary journey
-  const emotionGames = games.filter(g => g.area === "emotion");
-
   return (
-    <main className="min-h-screen relative">
-      <CalmBackground />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        
-        {/* Navigation Bar */}
-        <nav className="py-8 flex items-center justify-between">
-          <Link
-            href={`/children/${params.childId}`}
-            className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 text-sm font-bold text-slate-500 hover:text-blue-600 transition-all"
-          >
-            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Profile
-          </Link>
+    <main className="min-h-screen relative overflow-hidden pb-32">
+      <JourneyBackground />
 
-          {devMode && (
-            <div className="px-5 py-2.5 rounded-full bg-amber-50/50 backdrop-blur-md border border-amber-100 flex items-center gap-2">
-              <span className="text-xs">🛠️</span>
-              <span className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.15em]">Dev Mode Active</span>
+      {/* Simplified Navigation (Not Redesigning Navbar, but placing a custom back link) */}
+      <div className="max-w-7xl mx-auto px-6 py-8 relative z-50">
+        <Link
+          href={`/children/${params.childId}`}
+          className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/50 backdrop-blur-md border border-white/80 text-sm font-bold text-slate-500 hover:text-blue-600 hover:-translate-y-0.5 transition-all duration-300"
+        >
+          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Profile
+        </Link>
+      </div>
+
+      <div className="relative z-10">
+        <LearningJourneyHero 
+          childName={child?.child_name || "your child"} 
+          assessment={assessment} 
+        />
+
+        {/* The Guided Journey Timeline */}
+        <JourneyTimeline 
+          childId={params.childId} 
+          games={games} 
+        />
+
+        {/* Supportive Footer Note */}
+        <section className="mt-32 text-center max-w-2xl mx-auto px-6">
+          <div className="bg-white/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/60 shadow-sm">
+            <p className="text-slate-500 font-medium leading-relaxed italic">
+              "Every small step in the journey is a moment of growth. We are here to support you at every turn."
+            </p>
+            <div className="mt-4 flex items-center justify-center gap-2 text-blue-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-current" />
+              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
+              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-30" />
             </div>
-          )}
-        </nav>
-
-        <GamesHero child={child} assessment={assessment} />
-
-        <ChildProgressSummary assessment={assessment} />
-
-        <EmotionJourneySection childId={params.childId} games={emotionGames} />
-
-        <LockedFutureAreas />
-
-        <CalmFooterMessage />
-
+          </div>
+        </section>
       </div>
     </main>
   );

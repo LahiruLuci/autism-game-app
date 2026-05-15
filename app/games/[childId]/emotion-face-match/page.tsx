@@ -50,11 +50,14 @@ export default function EmotionFaceMatchGamePage() {
   const [question, setQuestion] = useState<EmotionQuestion | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "info" | null; message: string }>({ type: null, message: "" });
   
-  // 4. Performance State
-  const [correctCount, setCorrectCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
-  const [attempts, setAttempts] = useState(0);
-  const [startTime, setStartTime] = useState<number>(0);
+  // 4. Performance Metrics (Use refs for synchronous updates during game)
+  const correctCountRef = useRef(0);
+  const wrongCountRef = useRef(0);
+  const attemptsRef = useRef(0);
+  const startTimeRef = useRef<number>(0);
+
+  // Local state for UI display only
+  const [displayScore, setDisplayScore] = useState(0);
 
   // Initialize Data
   useEffect(() => {
@@ -65,7 +68,6 @@ export default function EmotionFaceMatchGamePage() {
           getGameBySlugAndLevel(EMOTION_FACE_MATCH_CONFIG.gameSlug, level),
         ]);
         
-        // Load curated questions for this level
         const levelQuestions = getQuestionsForEmotionLevel(level);
         
         setChild(c.child);
@@ -82,13 +84,16 @@ export default function EmotionFaceMatchGamePage() {
 
   // Game Controllers
   const startGame = () => {
+    correctCountRef.current = 0;
+    wrongCountRef.current = 0;
+    attemptsRef.current = 0;
+    startTimeRef.current = Date.now();
+    
     setGameState("playing");
-    setStartTime(Date.now());
     nextRound(1);
   };
 
   const nextRound = useCallback((roundNumber: number) => {
-    // Select question by round index (0-indexed)
     const nextQ = questions[roundNumber - 1];
     setQuestion(nextQ || null);
     setFeedback({ type: null, message: "" });
@@ -97,14 +102,23 @@ export default function EmotionFaceMatchGamePage() {
   const handleAnswer = async (selectedLabel: string) => {
     if (feedback.message || !question) return;
 
-    setAttempts(prev => prev + 1);
+    attemptsRef.current += 1;
 
-    // Normalize label for comparison if needed, but our buttons use emotion.label
     const targetEmotionData = EMOTIONS[question.correctAnswer];
 
     if (selectedLabel === targetEmotionData.label) {
       // Correct Path
-      setCorrectCount(prev => prev + 1);
+      correctCountRef.current += 1;
+      
+      // Update display score for header
+      const currentResult = calculateEmotionFaceMatchScore(
+        levelConfig,
+        correctCountRef.current,
+        wrongCountRef.current,
+        Math.floor((Date.now() - startTimeRef.current) / 1000)
+      );
+      setDisplayScore(currentResult.finalScore);
+
       setFeedback({ 
         type: "success", 
         message: targetEmotionData.supportiveText 
@@ -116,12 +130,12 @@ export default function EmotionFaceMatchGamePage() {
           setCurrentRound(nextR);
           nextRound(nextR);
         } else {
-          finishGame(correctCount + 1, wrongCount, attempts + 1);
+          finishGame();
         }
       }, 1800);
     } else {
-      // Wrong Path (Supportive)
-      setWrongCount(prev => prev + 1);
+      // Wrong Path
+      wrongCountRef.current += 1;
       setFeedback({ 
         type: "info", 
         message: "Good try! Let's practice this feeling again. 💛" 
@@ -133,15 +147,15 @@ export default function EmotionFaceMatchGamePage() {
     }
   };
 
-  const finishGame = async (finalCorrect: number, finalWrong: number, finalAttempts: number) => {
+  const finishGame = async () => {
     setGameState("saving");
     const endTime = Date.now();
-    const timeTaken = Math.floor((endTime - startTime) / 1000);
+    const timeTaken = Math.max(Math.floor((endTime - startTimeRef.current) / 1000), 1);
 
     const result = calculateEmotionFaceMatchScore(
       levelConfig,
-      finalCorrect,
-      finalWrong,
+      correctCountRef.current,
+      wrongCountRef.current,
       timeTaken
     );
 
@@ -151,9 +165,9 @@ export default function EmotionFaceMatchGamePage() {
         game_id: gameRecord?.id || "",
         area: "emotion",
         level,
-        correct_answers: finalCorrect,
-        wrong_answers: finalWrong,
-        attempts: finalAttempts,
+        correct_answers: correctCountRef.current,
+        wrong_answers: wrongCountRef.current,
+        attempts: attemptsRef.current,
         time_taken: timeTaken,
         final_score: result.finalScore
       });

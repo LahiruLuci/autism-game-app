@@ -18,7 +18,7 @@ export function ResultAchievementCards({ session }: ResultAchievementCardsProps)
     },
     {
       label: "Focus Progress",
-      value: `${Math.round((session.correct_answers / session.attempts) * 100)}%`,
+      value: `${Math.min(100, Math.round((session.correct_answers / Math.max(session.attempts, session.correct_answers, 1)) * 100))}%`,
       icon: "🌈",
       gradient: "from-blue-50 to-violet-50",
       border: "border-blue-100",
@@ -26,7 +26,7 @@ export function ResultAchievementCards({ session }: ResultAchievementCardsProps)
     },
     {
       label: "Practice Time",
-      value: `${session.time_taken}s`,
+      value: `${session.time_taken || 1}s`,
       icon: "⏰",
       gradient: "from-violet-50 to-pink-50",
       border: "border-violet-100",
