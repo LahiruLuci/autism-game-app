@@ -145,6 +145,8 @@ export default function ShapeNumberMatchPage() {
   };
 
   const handleSaveScore = async () => {
+    if (!gameData) return;
+
     setIsSaving(true);
     setSaveError(false);
 

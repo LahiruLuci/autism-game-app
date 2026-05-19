@@ -3,9 +3,8 @@ import { getChildForCurrentParent } from "./children";
 import { getLatestAssessmentForCurrentParent } from "./survey";
 import { getActiveGames } from "./games";
 import { ChildProfile } from "@/types/child";
-import { AssessmentResult } from "@/types/assessment";
-import { Game } from "@/types/game";
-import { GameScore } from "@/types/score";
+import { AssessmentResult } from "@/types/survey";
+import { Game, GameScore } from "@/types/game";
 
 export interface DashboardData {
   child: ChildProfile;

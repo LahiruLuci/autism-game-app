@@ -126,6 +126,8 @@ export default function EmotionReflectionBoardPage() {
   };
 
   const handleSaveScore = async () => {
+    if (!gameData) return;
+
     setIsSaving(true);
     setSaveError(false);
 

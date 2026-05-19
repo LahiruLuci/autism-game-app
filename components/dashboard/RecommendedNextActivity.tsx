@@ -23,7 +23,7 @@ export function RecommendedNextActivity({ childId, recommendation }: Recommended
       
       <div className="flex-1 flex flex-col justify-center">
         <h3 className="text-2xl font-black text-amber-900 leading-tight mb-3">
-          {recommendation.game.name} — Level {recommendation.game.level}
+          {recommendation.game.game_name} — Level {recommendation.game.level}
         </h3>
         <p className="text-amber-800/80 font-medium leading-relaxed mb-8">
           {recommendation.reason}

@@ -1,7 +1,6 @@
 "use client";
 
-import { GameScore } from "@/types/score";
-import { Game } from "@/types/game";
+import { Game, GameScore } from "@/types/game";
 import { formatDate } from "@/lib/dashboard";
 import { Activity } from "lucide-react";
 
@@ -17,7 +16,7 @@ export function RecentActivityTimeline({ scores, games }: RecentActivityTimeline
 
   const getGameName = (gameId: string) => {
     const game = games.find(g => g.id === gameId);
-    return game ? game.name : "Learning Activity";
+    return game ? game.game_name : "Learning Activity";
   };
 
   return (

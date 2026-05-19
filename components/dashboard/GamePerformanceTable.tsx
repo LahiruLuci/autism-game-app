@@ -1,7 +1,6 @@
 "use client";
 
-import { GameScore } from "@/types/score";
-import { Game } from "@/types/game";
+import { Game, GameScore } from "@/types/game";
 import { formatAreaName, formatDate, formatTime } from "@/lib/dashboard";
 
 interface GamePerformanceTableProps {
@@ -14,7 +13,7 @@ export function GamePerformanceTable({ scores, games }: GamePerformanceTableProp
 
   const getGameName = (gameId: string) => {
     const game = games.find(g => g.id === gameId);
-    return game ? game.name : "Unknown Game";
+    return game ? game.game_name : "Unknown Game";
   };
 
   return (

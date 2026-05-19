@@ -1,6 +1,6 @@
 "use client";
 
-import { GameScore } from "@/types/score";
+import { GameScore } from "@/types/game";
 import { AreaStat, formatAreaName } from "@/lib/dashboard";
 
 interface ChartProps {

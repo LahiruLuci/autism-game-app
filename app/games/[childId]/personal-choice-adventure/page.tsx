@@ -159,6 +159,8 @@ export default function PersonalChoiceAdventurePage() {
   };
 
   const handleSaveScore = async () => {
+    if (!gameData) return;
+
     setIsSaving(true);
     setSaveError(false);
 

@@ -25,10 +25,10 @@ export function DashboardHero({ child, level, lastSurveyDate, totalActivities }:
         
         <div className="flex-1 space-y-3">
           <h1 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">
-            {child.name}'s Learning Progress
+            {child.child_name}'s Learning Progress
           </h1>
           <p className="text-slate-500 font-medium max-w-2xl leading-relaxed">
-            A calm summary of learning activities, progress, and recommended next steps to support {child.name}'s journey.
+            A calm summary of learning activities, progress, and recommended next steps to support {child.child_name}'s journey.
           </p>
           
           <div className="flex flex-wrap items-center gap-4 pt-2">

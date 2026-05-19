@@ -155,6 +155,8 @@ export default function PatternBuilderPage() {
   };
 
   const handleSaveScore = async () => {
+    if (!gameData) return;
+
     setIsSaving(true);
     setSaveError(false);
 
