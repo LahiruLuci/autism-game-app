@@ -12,30 +12,43 @@ type EmotionAnswerGridProps = {
 
 export function EmotionAnswerGrid({ options, onAnswer, disabled, level }: EmotionAnswerGridProps) {
   // Grid layout logic based on level
-  const gridCols = level === 1 
-    ? "grid-cols-2 max-w-md mx-auto" 
-    : level === 2 
-      ? "grid-cols-2 max-w-lg mx-auto" 
-      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 max-w-4xl mx-auto";
+  const gridCols = level === 1
+    ? "grid-cols-2 max-w-md mx-auto"
+    : level === 2
+      ? "grid-cols-2 max-w-lg mx-auto"
+      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 max-w-5xl mx-auto";
 
   return (
-    <div className={`grid gap-4 w-full ${gridCols}`}>
+    <div className={`grid gap-4 sm:gap-6 w-full px-4 ${gridCols}`}>
       {options.map((emotion, index) => (
         <motion.button
           key={emotion.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          whileHover={!disabled ? { scale: 1.02, translateY: -2 } : {}}
-          whileTap={!disabled ? { scale: 0.98 } : {}}
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            delay: index * 0.05,
+            duration: 0.4,
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
+          whileHover={!disabled ? { scale: 1.05, y: -4 } : {}}
+          whileTap={!disabled ? { scale: 0.95 } : {}}
           disabled={disabled}
           onClick={() => onAnswer(emotion.label)}
-          className={`group flex flex-col items-center gap-3 p-6 rounded-[2rem] border-2 border-transparent shadow-sm transition-all disabled:opacity-50 ${emotion.color}`}
+          className={`
+            group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all duration-300
+            disabled:opacity-40 disabled:cursor-not-allowed
+            shadow-sm hover:shadow-xl hover:ring-8 ${emotion.color}
+          `}
         >
-          <span className="text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-300">
+          {/* Decorative background element */}
+          <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]" />
+
+          <span className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500 drop-shadow-md">
             {emotion.emoji}
           </span>
-          <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em]">
+          <span className="font-black text-xs uppercase tracking-[0.25em] relative z-10">
             {emotion.label}
           </span>
         </motion.button>

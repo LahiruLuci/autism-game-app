@@ -2,93 +2,157 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Play, Lock, Clock, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Play, Lock, Sparkles } from "lucide-react";
 import type { GameWithUnlockState } from "@/types/game";
 
 interface JourneyCardProps {
   childId: string;
   game: GameWithUnlockState;
+  isFirstUnlocked?: boolean;
 }
 
-export function JourneyCard({ childId, game }: JourneyCardProps) {
+const GAME_ASSETS: Record<string, { image: string; label: string; desc: string; mascotState: "normal" | "correct" | "incorrect" }> = {
+  "emotion-face-match": { image: "/images/games/emotion-face-match.png", label: "Face Match", desc: "Pick the feeling", mascotState: "normal" },
+  "count-the-objects": { image: "/images/games/count-the-objects.png", label: "Counting", desc: "Count together", mascotState: "normal" },
+  "daily-routine-order": { image: "/images/games/daily-routine.png", label: "My Day", desc: "Plan your day", mascotState: "normal" },
+  "emotion-reflection-board": { image: "/images/games/emotion-story.png", label: "Feelings", desc: "Check your mood", mascotState: "normal" },
+  "emotion-story-choice": { image: "/images/games/emotion-story.png", label: "Stories", desc: "Choose the story", mascotState: "normal" },
+  "memory-match": { image: "/images/games/memory-match.png", label: "Memory", desc: "Match the cards", mascotState: "normal" },
+  "pattern-builder": { image: "/images/games/pattern-builder.png", label: "Patterns", desc: "Build a path", mascotState: "normal" },
+  "personal-choice-adventure": { image: "/images/games/personal-choice.png", label: "Adventure", desc: "You decide", mascotState: "normal" },
+  "shape-number-match": { image: "/images/games/shapes-&-number-match.png", label: "Shapes", desc: "Find the shapes", mascotState: "normal" },
+};
+
+export function JourneyCard({ childId, game, isFirstUnlocked }: JourneyCardProps) {
   const isUnlocked = game.is_unlocked;
-  
-  const themes = {
-    emotion: "from-rose-50 to-orange-50 text-rose-600 border-rose-100 ring-rose-200/20",
-    cognitive: "from-blue-50 to-indigo-50 text-blue-600 border-blue-100 ring-blue-200/20",
-    self_awareness: "from-amber-50 to-yellow-50 text-amber-600 border-amber-100 ring-amber-200/20",
-    mathematical: "from-emerald-50 to-teal-50 text-emerald-600 border-emerald-100 ring-emerald-200/20",
+  const assets = GAME_ASSETS[game.game_slug] || {
+    image: "/images/games/emotion-face-match.png",
+    label: game.game_name,
+    desc: "Let's play",
+    mascotState: "normal"
   };
 
-  const areaTheme = themes[game.area as keyof typeof themes] || themes.emotion;
-  
-  const levelIcons = ["🌱", "🌤", "🌈"];
-  const levelLabels = ["Beginner", "Growing", "Challenge"];
-  const levelIcon = levelIcons[game.level - 1] || "✨";
-  const levelLabel = levelLabels[game.level - 1] || `Level ${game.level}`;
+  const themes = {
+    emotion: {
+      bg: "bg-[#FFF0F3]",
+      button: "bg-[#FF4D6D] hover:bg-[#FF002E]",
+      text: "text-[#C9184A]",
+      border: "border-[#FFB3C1]/30",
+      accent: "bg-[#FFB3C1]",
+      mascot: "/mascot/mascot-normal.png"
+    },
+    cognitive: {
+      bg: "bg-[#E0F2FE]",
+      button: "bg-[#0EA5E9] hover:bg-[#0284C7]",
+      text: "text-[#0369A1]",
+      border: "border-[#BAE6FD]/30",
+      accent: "bg-[#BAE6FD]",
+      mascot: "/mascot/mascot-happy.png"
+    },
+    self_awareness: {
+      bg: "bg-[#FEFCE8]",
+      button: "bg-[#EAB308] hover:bg-[#CA8A04]",
+      text: "text-[#A16207]",
+      border: "border-[#FEF08A]/30",
+      accent: "bg-[#FEF08A]",
+      mascot: "/mascot/mascot-normal.png"
+    },
+    mathematical: {
+      bg: "bg-[#F0FDF4]",
+      button: "bg-[#22C55E] hover:bg-[#16A34A]",
+      text: "text-[#15803D]",
+      border: "border-[#BBF7D0]/30",
+      accent: "bg-[#BBF7D0]",
+      mascot: "/mascot/mascot-normal.png"
+    },
+  };
+
+  const theme = themes[game.area as keyof typeof themes] || themes.emotion;
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={isUnlocked ? { y: -5 } : {}}
-      className="group relative h-full"
+      whileHover={isUnlocked ? { scale: 1.02 } : {}}
+      className="relative w-full"
     >
+      {/* "Ready to Play" Callout - Simplified, No excess sparkles */}
+      {isFirstUnlocked && (
+        <motion.div
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute -top-5 left-1/2 -translate-x-1/2 z-30 px-5 py-2 rounded-full bg-white shadow-md border border-slate-100 flex items-center gap-2"
+        >
+          <Sparkles size={14} className="text-yellow-400 fill-yellow-400" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">Ready!</span>
+        </motion.div>
+      )}
+
       <div className={`
-        h-full relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 p-6 flex flex-col transition-all duration-500
-        ${isUnlocked ? 'shadow-premium hover:shadow-2xl ring-1 ring-slate-100' : 'opacity-60 grayscale-[0.5]'}
+        relative overflow-hidden rounded-[3rem] border-4 transition-all duration-500
+        ${isUnlocked
+          ? `${theme.bg} ${theme.border} shadow-[0_20px_40px_-20px_rgba(0,0,0,0.1)]`
+          : 'bg-slate-50 border-slate-100 opacity-80'}
       `}>
-        {/* Progress Background Overlay (Optional) */}
-        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${areaTheme} blur-3xl opacity-30 -mr-16 -mt-16`} />
 
-        {/* Content Top */}
-        <div className="flex-1 space-y-6">
-          <div className="flex items-start justify-between">
-            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${areaTheme} flex items-center justify-center text-3xl shadow-inner`}>
-              {levelIcon}
-            </div>
-            <div className="flex flex-col items-end text-right">
-              <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${areaTheme}`}>
-                Level {game.level}
-              </span>
-              <span className="text-[10px] font-bold text-slate-400">
-                {levelLabel}
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-xl font-bold text-slate-900 leading-tight">
-              {game.game_name}
-            </h3>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
-              {game.description || "A calm learning activity."}
-            </p>
-          </div>
+        {/* Top Mascot Peek - Storytelling style */}
+        <div className="absolute top-4 right-4 w-16 h-16 opacity-40">
+          <Image
+            src={theme.mascot}
+            alt="Mascot"
+            width={60}
+            height={60}
+            className="object-contain"
+          />
         </div>
 
-        {/* Footer */}
-        <div className="pt-6 mt-6 border-t border-slate-50 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-slate-400 text-[10px] font-black uppercase tracking-widest">
-            <Clock size={12} />
-            <span>3-5m</span>
+        <div className="flex flex-col items-center p-8 space-y-6">
+
+          {/* Main Illustration Area - Large for visibility */}
+          <div className="relative w-full aspect-square max-w-[200px] flex items-center justify-center">
+            <div className={`absolute inset-0 rounded-full ${theme.accent} opacity-20 blur-2xl`} />
+            <div className="relative w-full h-full rounded-full bg-white shadow-sm border-8 border-white overflow-hidden p-4">
+              <Image
+                src={assets.image}
+                alt={assets.label}
+                fill
+                className={`object-contain transition-all duration-700 ${!isUnlocked ? "grayscale opacity-40" : ""}`}
+                priority
+              />
+            </div>
           </div>
 
-          {isUnlocked ? (
-            <Link
-              href={`/games/${childId}/${game.game_slug}?level=${game.level}`}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-lg shadow-slate-200"
-            >
-              <Play size={10} fill="currentColor" />
-              Start
-            </Link>
-          ) : (
-            <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
-              <Lock size={10} />
-              Locked
-            </div>
-          )}
+          {/* Minimal, Predictable Text */}
+          <div className="text-center space-y-1">
+            <h3 className="text-2xl font-black text-slate-900 leading-tight">
+              {assets.label}
+            </h3>
+            <p className="text-base font-bold text-slate-500">
+              {assets.desc}
+            </p>
+          </div>
+
+          {/* Action Area - Clean Pastel Button */}
+          <div className="w-full pt-2">
+            {isUnlocked ? (
+              <Link
+                href={`/games/${childId}/${game.game_slug}?level=${game.level}`}
+                className={`
+                  w-full py-5 rounded-2xl ${theme.button} text-white text-sm font-black uppercase tracking-widest
+                  flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-lg shadow-black/5
+                `}
+              >
+                <Play size={16} fill="currentColor" />
+                Let's Play
+              </Link>
+            ) : (
+              <div className="w-full py-5 rounded-2xl bg-white/60 text-slate-500 text-sm sm:text-base font-black leading-tight px-4 text-center border border-white/50 backdrop-blur-sm shadow-sm">
+                Finish this game to unlock 🌈
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

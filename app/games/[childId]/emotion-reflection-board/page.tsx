@@ -12,8 +12,8 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 import { ReflectionGameHeader } from "@/components/games/emotion-reflection-board/ReflectionGameHeader";
 import { ReflectionSituationCard } from "@/components/games/emotion-reflection-board/ReflectionSituationCard";
 import { ReflectionEmotionGrid } from "@/components/games/emotion-reflection-board/ReflectionEmotionGrid";
-import { ReflectionFeedback } from "@/components/games/emotion-reflection-board/ReflectionFeedback";
 import { ReflectionProgress } from "@/components/games/emotion-reflection-board/ReflectionProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic
 import { getLevelConfig } from "@/lib/games/emotion-reflection-board/levels";
@@ -66,10 +66,10 @@ export default function EmotionReflectionBoardPage() {
 
         setChild(childRes.child);
         setGameData(childRes.child ? gameRes : null);
-        
+
         const roundSituations = getSituationsForLevel(level, levelConfig.rounds);
         setSituations(roundSituations);
-        
+
         // Auto-start since this is a calm activity
         startTimeRef.current = Date.now();
         setGameState("playing");
@@ -90,15 +90,15 @@ export default function EmotionReflectionBoardPage() {
 
     const situation = situations[currentRound];
     const isExpected = selectedId === situation.expectedEmotion;
-    
+
     // Choose supportive feedback
     let msg = "";
     if (isExpected) {
       msg = getRandomFeedback("matching");
     } else {
       // Small chance to give "People feel differently" message
-      msg = Math.random() > 0.5 
-        ? getRandomFeedback("differing") 
+      msg = Math.random() > 0.5
+        ? getRandomFeedback("differing")
         : getRandomFeedback("general");
     }
 
@@ -109,7 +109,7 @@ export default function EmotionReflectionBoardPage() {
 
     setTimeout(() => {
       setFeedback({ message: "", visible: false });
-      
+
       if (currentRound + 1 < levelConfig.rounds) {
         setCurrentRound(prev => prev + 1);
         setIsAnswered(false);
@@ -175,23 +175,24 @@ export default function EmotionReflectionBoardPage() {
       <div className="relative z-10 flex-1 flex flex-col pb-20">
         {gameState === "playing" && situations.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-12 sm:gap-16">
-            <ReflectionFeedback message={feedback.message} visible={feedback.visible} />
-            
-            <ReflectionSituationCard 
-              emoji={situations[currentRound].emoji} 
-              situation={situations[currentRound].situation} 
+            {/* Reflection accepts all answers - mascot is always supportive after selection */}
+            <MascotFeedbackBar feedbackType={feedback.visible ? "correct" : null} />
+
+            <ReflectionSituationCard
+              emoji={situations[currentRound].emoji}
+              situation={situations[currentRound].situation}
             />
 
             <div className="w-full space-y-12">
-              <ReflectionEmotionGrid 
-                emotions={levelConfig.emotions} 
-                onSelect={handleSelectEmotion} 
-                disabled={isAnswered} 
+              <ReflectionEmotionGrid
+                emotions={levelConfig.emotions}
+                onSelect={handleSelectEmotion}
+                disabled={isAnswered}
               />
 
-              <ReflectionProgress 
-                current={currentRound + 1} 
-                total={levelConfig.rounds} 
+              <ReflectionProgress
+                current={currentRound + 1}
+                total={levelConfig.rounds}
               />
             </div>
           </div>

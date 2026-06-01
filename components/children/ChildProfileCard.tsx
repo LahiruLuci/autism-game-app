@@ -80,43 +80,54 @@ export function ChildProfileCard({ child, assessment }: ChildProfileCardProps) {
       </Link>
 
       {/* Bottom: Action buttons */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <Link
           href={hasAssessment ? `/games/${child.id}` : `/survey/${child.id}`}
-          className={`inline-flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-sm font-extrabold shadow-sm transition-all duration-300 active:scale-95 ${
-            hasAssessment
+          className={`inline-flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-base font-extrabold shadow-sm transition-all duration-300 active:scale-95 ${hasAssessment
               ? "bg-green-500 text-white hover:bg-green-600 hover:shadow-md hover:-translate-y-0.5"
               : "bg-blue-500 text-white hover:bg-blue-600 hover:shadow-md hover:-translate-y-0.5"
-          }`}
+            }`}
         >
           {hasAssessment ? (
             <>
               Continue Games
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               </svg>
             </>
           ) : (
             <>
-              Start Survey
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              Start Initial Survey
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </>
           )}
         </Link>
-        
-        {hasAssessment && (
+
+        <div className={`grid gap-3 ${hasAssessment ? "grid-cols-2" : "grid-cols-1"}`}>
           <Link
-            href={`/children/${child.id}/dashboard`}
-            className="inline-flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-sm font-extrabold shadow-sm transition-all duration-300 active:scale-95 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-100"
+            href={`/children/${child.id}`}
+            className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-bold shadow-sm transition-all duration-300 active:scale-95 bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-100 hover:border-slate-200"
           >
-            View Progress Dashboard
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
+            View Profile
           </Link>
-        )}
+
+          {hasAssessment && (
+            <Link
+              href={`/children/${child.id}/dashboard`}
+              className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-bold shadow-sm transition-all duration-300 active:scale-95 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-100 hover:border-indigo-200"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Report
+            </Link>
+          )}
+        </div>
       </div>
     </article>
   );

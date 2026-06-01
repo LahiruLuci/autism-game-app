@@ -13,8 +13,8 @@ import { ChoiceAdventureHeader } from "@/components/games/personal-choice-advent
 import { ChoiceStartScreen } from "@/components/games/personal-choice-adventure/ChoiceStartScreen";
 import { ScenarioCard } from "@/components/games/personal-choice-adventure/ScenarioCard";
 import { ChoiceCardGrid } from "@/components/games/personal-choice-adventure/ChoiceCardGrid";
-import { ChoiceFeedback } from "@/components/games/personal-choice-adventure/ChoiceFeedback";
 import { ChoiceProgress } from "@/components/games/personal-choice-adventure/ChoiceProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic
 import { getChoiceLevelConfig } from "@/lib/games/personal-choice-adventure/levels";
@@ -55,7 +55,7 @@ export default function PersonalChoiceAdventurePage() {
   const wrongCountRef = useRef(0);
   const attemptsRef = useRef(0);
   const startTimeRef = useRef<number>(0);
-  
+
   const [displayScore, setDisplayScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -71,7 +71,7 @@ export default function PersonalChoiceAdventurePage() {
 
         setChild(childRes.child);
         setGameData(childRes.child ? gameRes : null);
-        
+
         const levelScenarios = getScenariosForLevel(level, levelConfig.rounds);
         setScenarios(levelScenarios);
       } catch (error) {
@@ -89,7 +89,7 @@ export default function PersonalChoiceAdventurePage() {
     wrongCountRef.current = 0;
     attemptsRef.current = 0;
     startTimeRef.current = Date.now();
-    
+
     setGameState("playing");
     setCurrentRound(0);
     initRound(0);
@@ -110,11 +110,11 @@ export default function PersonalChoiceAdventurePage() {
 
     if (option.isCorrect) {
       correctCountRef.current += 1;
-      setFeedback({ 
-        message: getRandomChoiceFeedback("correct"), 
-        type: "correct" 
+      setFeedback({
+        message: getRandomChoiceFeedback("correct"),
+        type: "correct"
       });
-      
+
       // Update local score
       const newScore = calculateChoiceScore({
         correctAnswers: correctCountRef.current,
@@ -137,13 +137,13 @@ export default function PersonalChoiceAdventurePage() {
     } else {
       wrongCountRef.current += 1;
       const helpfulChoice = scenarios[currentRound].options.find(o => o.isCorrect);
-      
-      setFeedback({ 
-        message: getRandomChoiceFeedback("incorrect"), 
+
+      setFeedback({
+        message: getRandomChoiceFeedback("incorrect"),
         type: "incorrect",
         helpfulTip: helpfulChoice?.text
       });
-      
+
       // Allow retry (reset answered state) after delay
       setTimeout(() => {
         setIsAnswered(false);
@@ -202,10 +202,10 @@ export default function PersonalChoiceAdventurePage() {
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
       <CalmBackground />
 
-      <ChoiceAdventureHeader 
-        childId={params.childId} 
-        score={displayScore} 
-        level={level} 
+      <ChoiceAdventureHeader
+        childId={params.childId}
+        score={displayScore}
+        level={level}
       />
 
       <div className="relative z-10 flex-1 flex flex-col">
@@ -217,28 +217,24 @@ export default function PersonalChoiceAdventurePage() {
 
         {gameState === "playing" && scenarios.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
-            <ChoiceFeedback 
-              message={feedback.message} 
-              type={feedback.type} 
-              helpfulTip={feedback.helpfulTip}
-            />
-            
-            <ScenarioCard 
-              emoji={scenarios[currentRound].emoji} 
-              situation={scenarios[currentRound].situation} 
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
+            <ScenarioCard
+              emoji={scenarios[currentRound].emoji}
+              situation={scenarios[currentRound].situation}
               question={scenarios[currentRound].question}
             />
 
             <div className="w-full space-y-12">
-              <ChoiceCardGrid 
-                options={mixedOptions} 
-                onSelect={handleSelectChoice} 
-                disabled={isAnswered} 
+              <ChoiceCardGrid
+                options={mixedOptions}
+                onSelect={handleSelectChoice}
+                disabled={isAnswered}
               />
 
-              <ChoiceProgress 
-                current={currentRound + 1} 
-                total={levelConfig.rounds} 
+              <ChoiceProgress
+                current={currentRound + 1}
+                total={levelConfig.rounds}
               />
             </div>
           </div>

@@ -12,8 +12,8 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 import { MemoryGameHeader } from "@/components/games/memory-match/MemoryGameHeader";
 import { MemoryStartScreen } from "@/components/games/memory-match/MemoryStartScreen";
 import { MemoryCardGrid } from "@/components/games/memory-match/MemoryCardGrid";
-import { MemoryFeedback } from "@/components/games/memory-match/MemoryFeedback";
 import { MemoryProgress } from "@/components/games/memory-match/MemoryProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic & Helpers
 import { getLevelConfig } from "@/lib/games/memory-match/levels";
@@ -112,7 +112,7 @@ export default function MemoryMatchPage() {
         setMatchedPairs((prev) => prev + 1);
         setFlippedCards([]);
         showFeedback(getRandomFeedback("correct"), "correct");
-        
+
         // Update local score
         const newScore = calculateMemoryScore({
           correctAnswers: matchedPairs + 1,
@@ -127,7 +127,7 @@ export default function MemoryMatchPage() {
       // NO MATCH
       setWrongAnswers((prev) => prev + 1);
       showFeedback(getRandomFeedback("incorrect"), "incorrect");
-      
+
       setTimeout(() => {
         setCards((prev) =>
           prev.map((c) =>
@@ -226,8 +226,8 @@ export default function MemoryMatchPage() {
 
         {gameState === "playing" && (
           <div className="space-y-8 py-10">
-            <MemoryFeedback message={feedback.message} type={feedback.type} />
-            
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
             <MemoryCardGrid
               cards={cards}
               onCardClick={handleCardClick}
@@ -235,9 +235,9 @@ export default function MemoryMatchPage() {
               gridCols={levelConfig.gridCols}
             />
 
-            <MemoryProgress 
-              matchedPairs={matchedPairs} 
-              totalPairs={levelConfig.pairsCount} 
+            <MemoryProgress
+              matchedPairs={matchedPairs}
+              totalPairs={levelConfig.pairsCount}
             />
           </div>
         )}

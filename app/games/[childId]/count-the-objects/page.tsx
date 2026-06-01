@@ -12,8 +12,8 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 import { CountingGameHeader } from "@/components/games/count-the-objects/CountingGameHeader";
 import { CountingDisplayArea } from "@/components/games/count-the-objects/CountingDisplayArea";
 import { NumberChoiceGrid } from "@/components/games/count-the-objects/NumberChoiceGrid";
-import { CountingFeedback } from "@/components/games/count-the-objects/CountingFeedback";
 import { CountingProgress } from "@/components/games/count-the-objects/CountingProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic
 import { getCountingLevelConfig } from "@/lib/games/count-the-objects/levels";
@@ -53,7 +53,7 @@ export default function CountTheObjectsPage() {
   const wrongCountRef = useRef(0);
   const attemptsRef = useRef(0);
   const startTimeRef = useRef<number>(0);
-  
+
   const [displayScore, setDisplayScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -69,15 +69,15 @@ export default function CountTheObjectsPage() {
 
         setChild(childRes.child);
         setGameData(childRes.child ? gameRes : null);
-        
+
         const generatedQuestions = generateCountingQuestions(
-          level, 
-          levelConfig.rounds, 
-          levelConfig.maxQuantity, 
+          level,
+          levelConfig.rounds,
+          levelConfig.maxQuantity,
           levelConfig.optionsCount
         );
         setQuestions(generatedQuestions);
-        
+
         // Auto-start for counting
         startTimeRef.current = Date.now();
         setGameState("playing");
@@ -101,11 +101,11 @@ export default function CountTheObjectsPage() {
 
     if (isCorrect) {
       correctCountRef.current += 1;
-      setFeedback({ 
-        message: getRandomCountingFeedback("correct"), 
-        type: "correct" 
+      setFeedback({
+        message: getRandomCountingFeedback("correct"),
+        type: "correct"
       });
-      
+
       // Update local score
       const newScore = calculateCountingScore({
         correctAnswers: correctCountRef.current,
@@ -128,11 +128,11 @@ export default function CountTheObjectsPage() {
       }, 2000);
     } else {
       wrongCountRef.current += 1;
-      setFeedback({ 
-        message: getRandomCountingFeedback("incorrect"), 
-        type: "incorrect" 
+      setFeedback({
+        message: getRandomCountingFeedback("incorrect"),
+        type: "incorrect"
       });
-      
+
       // Allow retry after delay
       setTimeout(() => {
         setIsAnswered(false);
@@ -190,39 +190,36 @@ export default function CountTheObjectsPage() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
       <CalmBackground />
-      
+
       {/* Dynamic Themed Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-br from-cyan-50 via-blue-50/20 to-violet-50/20 opacity-60" />
 
-      <CountingGameHeader 
-        childId={params.childId} 
-        score={displayScore} 
-        level={level} 
+      <CountingGameHeader
+        childId={params.childId}
+        score={displayScore}
+        level={level}
       />
 
       <div className="relative z-10 flex-1 flex flex-col">
         {gameState === "playing" && questions.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
-            <CountingFeedback 
-              message={feedback.message} 
-              type={feedback.type} 
-            />
-            
-            <CountingDisplayArea 
-              emoji={questions[currentRound].emoji} 
-              count={questions[currentRound].count} 
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
+            <CountingDisplayArea
+              emoji={questions[currentRound].emoji}
+              count={questions[currentRound].count}
             />
 
             <div className="w-full space-y-12">
-              <NumberChoiceGrid 
-                options={questions[currentRound].options} 
-                onSelect={handleSelectAnswer} 
-                disabled={isAnswered} 
+              <NumberChoiceGrid
+                options={questions[currentRound].options}
+                onSelect={handleSelectAnswer}
+                disabled={isAnswered}
               />
 
-              <CountingProgress 
-                current={currentRound + 1} 
-                total={levelConfig.rounds} 
+              <CountingProgress
+                current={currentRound + 1}
+                total={levelConfig.rounds}
               />
             </div>
           </div>

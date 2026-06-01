@@ -12,8 +12,8 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 import { ShapeMatchHeader } from "@/components/games/shape-number-match/ShapeMatchHeader";
 import { ShapeDisplayCard } from "@/components/games/shape-number-match/ShapeDisplayCard";
 import { ShapeAnswerGrid } from "@/components/games/shape-number-match/ShapeAnswerGrid";
-import { ShapeFeedback } from "@/components/games/shape-number-match/ShapeFeedback";
 import { ShapeProgress } from "@/components/games/shape-number-match/ShapeProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic
 import { getShapeMatchLevelConfig } from "@/lib/games/shape-number-match/levels";
@@ -53,7 +53,7 @@ export default function ShapeNumberMatchPage() {
   const wrongCountRef = useRef(0);
   const attemptsRef = useRef(0);
   const startTimeRef = useRef<number>(0);
-  
+
   const [displayScore, setDisplayScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -69,15 +69,15 @@ export default function ShapeNumberMatchPage() {
 
         setChild(childRes.child);
         setGameData(childRes.child ? gameRes : null);
-        
+
         const generatedQuestions = generateShapeMatchQuestions(
-          level, 
-          levelConfig.rounds, 
-          levelConfig.maxQuantity, 
+          level,
+          levelConfig.rounds,
+          levelConfig.maxQuantity,
           levelConfig.optionsCount
         );
         setQuestions(generatedQuestions);
-        
+
         // Auto-start for mathematical activities
         startTimeRef.current = Date.now();
         setGameState("playing");
@@ -98,11 +98,11 @@ export default function ShapeNumberMatchPage() {
 
     if (option.isCorrect) {
       correctCountRef.current += 1;
-      setFeedback({ 
-        message: getRandomShapeFeedback("correct"), 
-        type: "correct" 
+      setFeedback({
+        message: getRandomShapeFeedback("correct"),
+        type: "correct"
       });
-      
+
       // Update local score
       const newScore = calculateShapeMatchScore({
         correctAnswers: correctCountRef.current,
@@ -125,11 +125,11 @@ export default function ShapeNumberMatchPage() {
       }, 2000);
     } else {
       wrongCountRef.current += 1;
-      setFeedback({ 
-        message: getRandomShapeFeedback("incorrect"), 
-        type: "incorrect" 
+      setFeedback({
+        message: getRandomShapeFeedback("incorrect"),
+        type: "incorrect"
       });
-      
+
       // Allow retry after delay
       setTimeout(() => {
         setIsAnswered(false);
@@ -187,42 +187,39 @@ export default function ShapeNumberMatchPage() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
       <CalmBackground />
-      
+
       {/* Dynamic Themed Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-br from-sky-50 via-cyan-50/20 to-violet-50/20 opacity-60" />
 
-      <ShapeMatchHeader 
-        childId={params.childId} 
-        score={displayScore} 
-        level={level} 
+      <ShapeMatchHeader
+        childId={params.childId}
+        score={displayScore}
+        level={level}
       />
 
       <div className="relative z-10 flex-1 flex flex-col">
         {gameState === "playing" && questions.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
-            <ShapeFeedback 
-              message={feedback.message} 
-              type={feedback.type} 
-            />
-            
-            <ShapeDisplayCard 
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
+            <ShapeDisplayCard
               mode={questions[currentRound].mode}
-              emoji={questions[currentRound].emoji} 
-              count={questions[currentRound].count} 
+              emoji={questions[currentRound].emoji}
+              count={questions[currentRound].count}
             />
 
             <div className="w-full space-y-12">
-              <ShapeAnswerGrid 
+              <ShapeAnswerGrid
                 mode={questions[currentRound].mode}
                 emoji={questions[currentRound].emoji}
-                options={questions[currentRound].options} 
-                onSelect={handleSelectAnswer} 
-                disabled={isAnswered} 
+                options={questions[currentRound].options}
+                onSelect={handleSelectAnswer}
+                disabled={isAnswered}
               />
 
-              <ShapeProgress 
-                current={currentRound + 1} 
-                total={levelConfig.rounds} 
+              <ShapeProgress
+                current={currentRound + 1}
+                total={levelConfig.rounds}
               />
             </div>
           </div>

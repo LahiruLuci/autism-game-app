@@ -13,8 +13,8 @@ import { PatternGameHeader } from "@/components/games/pattern-builder/PatternGam
 import { PatternStartScreen } from "@/components/games/pattern-builder/PatternStartScreen";
 import { PatternSequenceCard } from "@/components/games/pattern-builder/PatternSequenceCard";
 import { PatternAnswerGrid } from "@/components/games/pattern-builder/PatternAnswerGrid";
-import { PatternFeedback } from "@/components/games/pattern-builder/PatternFeedback";
 import { PatternProgress } from "@/components/games/pattern-builder/PatternProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic & Helpers
 import { getLevelConfig } from "@/lib/games/pattern-builder/levels";
@@ -44,7 +44,7 @@ export default function PatternBuilderPage() {
   const [questions, setQuestions] = useState<PatternQuestion[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
-  
+
   // 4. Performance Metrics (Use refs for synchronous updates)
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
@@ -108,7 +108,7 @@ export default function PatternBuilderPage() {
     if (isCorrect) {
       correctCountRef.current += 1;
       showFeedback(getRandomFeedback("correct"), "correct");
-      
+
       // Update local score
       const newScore = calculatePatternScore({
         correctAnswers: correctCountRef.current,
@@ -131,7 +131,7 @@ export default function PatternBuilderPage() {
     } else {
       wrongCountRef.current += 1;
       showFeedback(getRandomFeedback("incorrect"), "incorrect");
-      
+
       // Allow retry after delay
       setTimeout(() => {
         setIsAnswered(false);
@@ -211,22 +211,22 @@ export default function PatternBuilderPage() {
 
         {gameState === "playing" && questions.length > 0 && (
           <div className="space-y-12 py-10">
-            <PatternFeedback message={feedback.message} type={feedback.type} />
-            
-            <PatternSequenceCard 
-              pattern={questions[currentRound].pattern} 
-              instruction={questions[currentRound].instruction} 
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
+            <PatternSequenceCard
+              pattern={questions[currentRound].pattern}
+              instruction={questions[currentRound].instruction}
             />
 
-            <PatternAnswerGrid 
-              options={questions[currentRound].options} 
-              onSelect={handleAnswer} 
-              disabled={isAnswered} 
+            <PatternAnswerGrid
+              options={questions[currentRound].options}
+              onSelect={handleAnswer}
+              disabled={isAnswered}
             />
 
-            <PatternProgress 
-              current={currentRound + 1} 
-              total={levelConfig.totalRounds} 
+            <PatternProgress
+              current={currentRound + 1}
+              total={levelConfig.totalRounds}
             />
           </div>
         )}
@@ -239,7 +239,7 @@ export default function PatternBuilderPage() {
               {saveError ? (
                 <div className="space-y-6">
                   <p className="text-lg text-slate-500 font-medium leading-relaxed">
-                    You've solved every sequence, but we're having a little trouble saving your score right now. 
+                    You've solved every sequence, but we're having a little trouble saving your score right now.
                   </p>
                   <button
                     onClick={handleSaveScore}
@@ -251,7 +251,7 @@ export default function PatternBuilderPage() {
                 </div>
               ) : (
                 <p className="text-xl text-slate-500 font-medium leading-relaxed">
-                  You've solved every sequence! <br/>
+                  You've solved every sequence! <br />
                   {isSaving ? "Saving your progress now..." : "Success! Preparing your result..."}
                 </p>
               )}

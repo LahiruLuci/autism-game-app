@@ -23,7 +23,7 @@ import { StoryHeader } from "@/components/games/emotion-story-choice/StoryHeader
 import { StoryProgressBar } from "@/components/games/emotion-story-choice/StoryProgressBar";
 import { StoryCard } from "@/components/games/emotion-story-choice/StoryCard";
 import { StoryAnswerGrid } from "@/components/games/emotion-story-choice/StoryAnswerGrid";
-import { EmotionSupportiveFeedback } from "@/components/games/emotion-face-match/EmotionSupportiveFeedback";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Types
 import type { ChildProfile } from "@/types/child";
@@ -35,7 +35,7 @@ export default function EmotionStoryChoicePage() {
   const params = useParams<{ childId: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   // 1. Level Initialization
   const level = parseInt(searchParams.get("level") || "1");
   const levelConfig = getStoryLevelConfig(level);
@@ -44,13 +44,13 @@ export default function EmotionStoryChoicePage() {
   const [gameState, setGameState] = useState<"loading" | "start" | "playing" | "saving" | "error">("loading");
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [gameRecord, setGameRecord] = useState<Game | null>(null);
-  
+
   // 3. Gameplay State
   const [stories, setStories] = useState<Story[]>([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [story, setStory] = useState<Story | null>(null);
   const [feedback, setFeedback] = useState<{ type: "correct" | "incorrect" | null; visible: boolean }>({ type: null, visible: false });
-  
+
   // 4. Performance State
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
@@ -65,9 +65,9 @@ export default function EmotionStoryChoicePage() {
           getChildForCurrentParent(params.childId),
           getGameBySlugAndLevel(EMOTION_STORY_CHOICE_CONFIG.gameSlug, level),
         ]);
-        
+
         const levelStories = shuffleStories(getStoriesForLevel(level));
-        
+
         setChild(c.child);
         setGameRecord(g);
         setStories(levelStories);
@@ -101,7 +101,7 @@ export default function EmotionStoryChoicePage() {
     if (selectedId === story.correctEmotion) {
       setCorrectCount(prev => prev + 1);
       setFeedback({ type: "correct", visible: true });
-      
+
       setTimeout(() => {
         if (currentRound < levelConfig.rounds) {
           const nextR = currentRound + 1;
@@ -114,7 +114,7 @@ export default function EmotionStoryChoicePage() {
     } else {
       setWrongCount(prev => prev + 1);
       setFeedback({ type: "incorrect", visible: true });
-      
+
       setTimeout(() => {
         setFeedback({ type: null, visible: false });
       }, 2000);
@@ -165,7 +165,7 @@ export default function EmotionStoryChoicePage() {
     return (
       <main className="min-h-screen relative flex items-center justify-center p-4">
         <CalmBackground />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-[3rem] p-10 shadow-2xl shadow-blue-900/5 border border-white/80 text-center"
@@ -222,35 +222,32 @@ export default function EmotionStoryChoicePage() {
   return (
     <main className="min-h-screen relative flex flex-col overflow-hidden">
       <CalmBackground />
-      
-      <StoryHeader 
-        childName={child?.child_name || "Child"} 
-        levelConfig={levelConfig} 
-        currentRound={currentRound} 
-        childId={params.childId} 
+
+      <StoryHeader
+        childName={child?.child_name || "Child"}
+        levelConfig={levelConfig}
+        currentRound={currentRound}
+        childId={params.childId}
       />
 
-      <StoryProgressBar 
-        currentRound={currentRound} 
-        totalRounds={levelConfig.rounds} 
+      <StoryProgressBar
+        currentRound={currentRound}
+        totalRounds={levelConfig.rounds}
       />
 
       <div className="flex-1 flex flex-col items-center justify-start p-6 pt-12 space-y-12">
         {story && (
           <>
             <div className="w-full space-y-8 flex flex-col items-center">
-              <EmotionSupportiveFeedback 
-                type={feedback.type} 
-                visible={feedback.visible} 
-              />
+              <MascotFeedbackBar feedbackType={feedback.type} />
               <StoryCard story={story} />
             </div>
 
             <div className="w-full space-y-8 pb-12">
-              <StoryAnswerGrid 
-                options={story.options} 
-                onAnswer={handleAnswer} 
-                disabled={feedback.visible} 
+              <StoryAnswerGrid
+                options={story.options}
+                onAnswer={handleAnswer}
+                disabled={feedback.visible}
               />
             </div>
           </>

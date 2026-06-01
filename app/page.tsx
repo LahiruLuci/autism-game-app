@@ -7,7 +7,8 @@ export default function Home() {
       {/* Hero Section - Ultra Premium Redesign */}
       <section className="relative min-h-screen lg:h-screen lg:max-h-[900px] flex items-center justify-center overflow-hidden pt-16 sm:pt-20">
         {/* Advanced Custom CSS for Next-Level Animations & Glassmorphism */}
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(1deg); }
@@ -63,7 +64,7 @@ export default function Home() {
         {/* Ethereal Background with Orbs & Noise Texture */}
         <div className="absolute inset-0 hero-bg-texture -z-20"></div>
         <div className="absolute inset-0 svg-noise -z-10 pointer-events-none"></div>
-        
+
         <div className="absolute inset-0 w-full h-full overflow-hidden -z-10 flex items-center justify-center">
           <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full bg-blue-200/40 mix-blend-multiply filter blur-[80px] opacity-70 animate-blob"></div>
           <div className="absolute top-[10%] right-[-10%] w-[35vw] h-[35vw] rounded-full bg-violet-200/40 mix-blend-multiply filter blur-[80px] opacity-70 animate-blob-delayed"></div>
@@ -72,10 +73,10 @@ export default function Home() {
 
         <div className="layout-container relative z-10 w-full h-full flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center w-full">
-            
+
             {/* Left Column: Typography & Call to Action */}
             <div className="col-span-1 lg:col-span-6 2xl:col-span-5 flex flex-col justify-center text-center lg:text-left py-10 lg:py-0">
-              
+
               {/* Premium Pill Badge */}
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-pill mb-6 mx-auto lg:mx-0 w-max shadow-sm">
                 <span className="relative flex h-2.5 w-2.5">
@@ -96,7 +97,7 @@ export default function Home() {
               <p className="text-base sm:text-lg text-slate-600 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
                 Discover a calming, interactive world designed for neurodivergent children. Our supportive games gently nurture emotional, cognitive, and social milestones at their own perfect pace.
               </p>
-              
+
               {/* High-End Button Group */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
                 <Link href="/register" className="group relative inline-flex items-center justify-center gap-3 bg-slate-900 text-white px-8 py-3.5 rounded-full font-semibold text-base sm:text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] duration-300">
@@ -106,7 +107,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
-                
+
                 <Link href="/login" className="group inline-flex items-center justify-center px-8 py-3.5 rounded-full font-semibold text-base sm:text-lg text-slate-700 bg-white/50 backdrop-blur-md border border-slate-200 hover:bg-white hover:border-slate-300 transition-all hover:shadow-lg hover:-translate-y-0.5 duration-300">
                   Parent Access
                   <span className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
@@ -136,18 +137,18 @@ export default function Home() {
 
             {/* Right Column: Abstract Multi-layered Image Collage */}
             <div className="col-span-1 lg:col-span-6 2xl:col-span-7 relative w-full h-[50vh] lg:h-[75vh] max-h-[550px] flex items-center justify-center mt-6 lg:mt-0 pb-10 lg:pb-0">
-              
+
               {/* Abstract decorative elements */}
               <div className="absolute top-1/4 right-0 w-24 h-24 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"></div>
               <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob"></div>
 
               <div className="relative w-full max-w-[380px] lg:max-w-[460px] aspect-[4/5] mx-auto z-10">
-                
+
                 {/* Main Large Portrait Image */}
                 <div className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] border-[6px] border-white/80 animate-float">
-                  <img 
-                    src="https://images.unsplash.com/photo-1602030028438-4cf153cba9ed?q=80&w=2070&auto=format&fit=crop" 
-                    alt="Child in a calm environment" 
+                  <img
+                    src="/images/pexels-rdne-8385875.jpg"
+                    alt="Child in a calm environment"
                     className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000 ease-out"
                   />
                   {/* Subtle inner gradient for premium feel */}
@@ -156,9 +157,9 @@ export default function Home() {
 
                 {/* Overlapping Landscape Image (Bottom Left) */}
                 <div className="absolute -left-6 sm:-left-12 bottom-6 w-[65%] aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-[5px] border-white animate-float-delayed z-20">
-                  <img 
-                    src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=2000&auto=format&fit=crop" 
-                    alt="Hands playing with educational toys" 
+                  <img
+                    src="/images/pexels-cottonbro-4715329.jpg"
+                    alt="Hands playing with educational toys"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>
@@ -187,7 +188,7 @@ export default function Home() {
                 <svg className="absolute -top-6 -left-6 w-10 h-10 text-warning-amber animate-spin z-0 opacity-80 filter drop-shadow-md" style={{ animationDuration: '15s' }} viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0l2.5 8.5L23 11l-8.5 2.5L12 22l-2.5-8.5L1 11l8.5-2.5z" />
                 </svg>
-                
+
                 {/* Decorative Sparkle SVG (Bottom Right) */}
                 <svg className="absolute -bottom-6 right-6 w-8 h-8 text-primary-blue animate-spin z-30 opacity-70 filter drop-shadow-md" style={{ animationDuration: '10s', animationDirection: 'reverse' }} viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0l2.5 8.5L23 11l-8.5 2.5L12 22l-2.5-8.5L1 11l8.5-2.5z" />
@@ -230,15 +231,15 @@ export default function Home() {
 
           {/* Asymmetrical Bento Grid */}
           <div className="flex flex-col gap-6">
-            
+
             {/* Top Row */}
             <div className="flex flex-col lg:flex-row gap-6">
-              
+
               {/* Emotion (Large Card) */}
               <div className="relative group w-full lg:w-7/12 aspect-square sm:aspect-[2/1] lg:aspect-auto lg:h-[480px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=2070&auto=format&fit=crop" alt="Emotion" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                <img src="/images/pexels-sabbir-bhuiyan-1747552532-32221017.jpg" alt="Emotion" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent transition-opacity duration-700 group-hover:opacity-90"></div>
-                
+
                 {/* Content */}
                 <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end z-20">
                   <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
@@ -248,7 +249,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <h3 className="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">Emotion</h3>
-                    
+
                     {/* Hidden Hover Content (Expands naturally without overlap) */}
                     <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
                       <div className="overflow-hidden">
@@ -263,9 +264,9 @@ export default function Home() {
 
               {/* Cognitive Skills (Small Card) */}
               <div className="relative group w-full lg:w-5/12 aspect-square sm:aspect-[2/1] lg:aspect-auto lg:h-[480px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1611080922880-928cc518779b?q=80&w=2069&auto=format&fit=crop" alt="Cognitive Skills" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                <img src="/images/cognative-skill.jpg" alt="Cognitive Skills" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent transition-opacity duration-700 group-hover:opacity-90"></div>
-                
+
                 {/* Content */}
                 <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end z-20">
                   <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
@@ -275,7 +276,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <h3 className="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">Cognitive Skills</h3>
-                    
+
                     {/* Hidden Hover Content */}
                     <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
                       <div className="overflow-hidden">
@@ -292,12 +293,12 @@ export default function Home() {
 
             {/* Bottom Row */}
             <div className="flex flex-col lg:flex-row gap-6">
-              
+
               {/* Self-awareness (Small Card) */}
               <div className="relative group w-full lg:w-5/12 aspect-square sm:aspect-[2/1] lg:aspect-auto lg:h-[480px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=2000&auto=format&fit=crop" alt="Self-awareness" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                <img src="/images/self-awareness.jpg" alt="Self-awareness" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent transition-opacity duration-700 group-hover:opacity-90"></div>
-                
+
                 {/* Content */}
                 <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end z-20">
                   <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
@@ -307,7 +308,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <h3 className="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">Self-awareness</h3>
-                    
+
                     {/* Hidden Hover Content */}
                     <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
                       <div className="overflow-hidden">
@@ -322,9 +323,9 @@ export default function Home() {
 
               {/* Mathematical Skills (Large Card) */}
               <div className="relative group w-full lg:w-7/12 aspect-square sm:aspect-[2/1] lg:aspect-auto lg:h-[480px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=2070&auto=format&fit=crop" alt="Mathematical Skills" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                <img src="/images/methematical-skill.jpg" alt="Mathematical Skills" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent transition-opacity duration-700 group-hover:opacity-90"></div>
-                
+
                 {/* Content */}
                 <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end z-20">
                   <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
@@ -334,7 +335,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <h3 className="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">Mathematical Skills</h3>
-                    
+
                     {/* Hidden Hover Content */}
                     <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
                       <div className="overflow-hidden">
@@ -368,7 +369,7 @@ export default function Home() {
               Ready to support their <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-secondary-violet to-teal-400">growth journey?</span>
             </h2>
-            
+
             <div className="relative mb-16">
               <Link href="/register" className="inline-flex items-center justify-center px-10 py-5 text-lg font-extrabold text-white bg-slate-900 rounded-full hover:scale-105 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] transition-all duration-500 relative z-10 overflow-hidden group/btn">
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary-blue via-secondary-violet to-teal-400 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></span>
@@ -395,11 +396,11 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            
+
           </div>
         </div>
       </section>
-      
+
 
     </main>
   );

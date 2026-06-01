@@ -15,8 +15,8 @@ import { RoutineGameHeader } from "@/components/games/daily-routine-order/Routin
 import { RoutineStartScreen } from "@/components/games/daily-routine-order/RoutineStartScreen";
 import { RoutineMixedSteps } from "@/components/games/daily-routine-order/RoutineMixedSteps";
 import { RoutineSelectedOrder } from "@/components/games/daily-routine-order/RoutineSelectedOrder";
-import { RoutineFeedback } from "@/components/games/daily-routine-order/RoutineFeedback";
 import { RoutineProgress } from "@/components/games/daily-routine-order/RoutineProgress";
+import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
 
 // Logic & Helpers
 import { getLevelConfig } from "@/lib/games/daily-routine-order/levels";
@@ -48,7 +48,7 @@ export default function DailyRoutineOrderPage() {
   const [mixedSteps, setMixedSteps] = useState<RoutineStep[]>([]);
   const [selectedSteps, setSelectedSteps] = useState<RoutineStep[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
-  
+
   // 4. Performance Metrics (Use refs for synchronous updates)
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
@@ -117,7 +117,7 @@ export default function DailyRoutineOrderPage() {
   // Check Order
   const handleCheckOrder = () => {
     if (isAnswered || selectedSteps.length !== routines[currentRound].steps.length) return;
-    
+
     setIsAnswered(true);
     attemptsRef.current += 1;
 
@@ -126,7 +126,7 @@ export default function DailyRoutineOrderPage() {
     if (isCorrect) {
       correctCountRef.current += 1;
       showFeedback(getRandomFeedback("correct"), "correct");
-      
+
       // Update local score
       const newScore = calculateRoutineScore({
         correctAnswers: correctCountRef.current,
@@ -150,7 +150,7 @@ export default function DailyRoutineOrderPage() {
     } else {
       wrongCountRef.current += 1;
       showFeedback(getRandomFeedback("incorrect"), "incorrect");
-      
+
       // Allow retry
       setTimeout(() => {
         setSelectedSteps([]);
@@ -233,8 +233,8 @@ export default function DailyRoutineOrderPage() {
 
         {gameState === "playing" && routines.length > 0 && (
           <div className="space-y-12 py-6">
-            <RoutineFeedback message={feedback.message} type={feedback.type} />
-            
+            <MascotFeedbackBar feedbackType={feedback.type} />
+
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-black text-slate-900 tracking-tight">
                 {routines[currentRound].title}
@@ -242,16 +242,16 @@ export default function DailyRoutineOrderPage() {
               <p className="text-slate-500 font-medium">Tap the steps in the correct order.</p>
             </div>
 
-            <RoutineSelectedOrder 
-              selectedSteps={selectedSteps} 
-              totalSteps={routines[currentRound].steps.length} 
+            <RoutineSelectedOrder
+              selectedSteps={selectedSteps}
+              totalSteps={routines[currentRound].steps.length}
             />
 
-            <RoutineMixedSteps 
-              steps={mixedSteps} 
-              selectedIds={selectedSteps.map(s => s.id)} 
-              onSelect={handleSelectStep} 
-              disabled={isAnswered} 
+            <RoutineMixedSteps
+              steps={mixedSteps}
+              selectedIds={selectedSteps.map(s => s.id)}
+              onSelect={handleSelectStep}
+              disabled={isAnswered}
             />
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
@@ -263,7 +263,7 @@ export default function DailyRoutineOrderPage() {
                 <Undo2 size={18} />
                 Undo Step
               </button>
-              
+
               <button
                 disabled={isAnswered || selectedSteps.length !== routines[currentRound].steps.length}
                 onClick={handleCheckOrder}
@@ -274,9 +274,9 @@ export default function DailyRoutineOrderPage() {
               </button>
             </div>
 
-            <RoutineProgress 
-              current={currentRound + 1} 
-              total={levelConfig.totalRounds} 
+            <RoutineProgress
+              current={currentRound + 1}
+              total={levelConfig.totalRounds}
             />
           </div>
         )}
@@ -289,7 +289,7 @@ export default function DailyRoutineOrderPage() {
               {saveError ? (
                 <div className="space-y-6">
                   <p className="text-lg text-slate-500 font-medium leading-relaxed">
-                    You've completed your daily routine practice, but we're having a little trouble saving your score right now. 
+                    You've completed your daily routine practice, but we're having a little trouble saving your score right now.
                   </p>
                   <button
                     onClick={handleSaveScore}
@@ -301,7 +301,7 @@ export default function DailyRoutineOrderPage() {
                 </div>
               ) : (
                 <p className="text-xl text-slate-500 font-medium leading-relaxed">
-                  You've completed your daily routine practice. <br/>
+                  You've completed your daily routine practice. <br />
                   {isSaving ? "Saving your progress now..." : "Success! Preparing your result..."}
                 </p>
               )}
