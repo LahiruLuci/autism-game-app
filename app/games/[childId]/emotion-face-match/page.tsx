@@ -2,7 +2,7 @@
 
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Backend Helpers
 import { getChildForCurrentParent } from "@/lib/children";
@@ -49,16 +49,13 @@ export default function EmotionFaceMatchGamePage() {
   const [questions, setQuestions] = useState<EmotionQuestion[]>([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [question, setQuestion] = useState<EmotionQuestion | null>(null);
-  const [feedback, setFeedback] = useState<{ type: "success" | "info" | null; message: string }>({ type: null, message: "Choose the answer you think is correct." });
+  const [feedback, setFeedback] = useState<{ type: "success" | "info" | null; message: string }>({ type: null, message: "Let's think together!" });
 
-  // 4. Performance Metrics (Use refs for synchronous updates during game)
+  // 4. Performance Metrics
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
   const attemptsRef = useRef(0);
   const startTimeRef = useRef<number>(0);
-
-  // Local state for UI display only
-  const [displayScore, setDisplayScore] = useState(0);
 
   // Initialize Data
   useEffect(() => {
@@ -97,32 +94,20 @@ export default function EmotionFaceMatchGamePage() {
   const nextRound = useCallback((roundNumber: number) => {
     const nextQ = questions[roundNumber - 1];
     setQuestion(nextQ || null);
-    setFeedback({ type: null, message: "Choose the answer you think is correct." });
+    setFeedback({ type: null, message: "Let's think together!" });
   }, [questions]);
 
   const handleAnswer = async (selectedLabel: string) => {
     if (feedback.type || !question) return;
 
     attemptsRef.current += 1;
-
     const targetEmotionData = EMOTIONS[question.correctAnswer];
 
     if (selectedLabel === targetEmotionData.label) {
-      // Correct Path
       correctCountRef.current += 1;
-
-      // Update display score for header
-      const currentResult = calculateEmotionFaceMatchScore(
-        levelConfig,
-        correctCountRef.current,
-        wrongCountRef.current,
-        Math.floor((Date.now() - startTimeRef.current) / 1000)
-      );
-      setDisplayScore(currentResult.finalScore);
-
       setFeedback({
         type: "success",
-        message: "Great job! You got it right!"
+        message: "Great job! You got it!"
       });
 
       setTimeout(() => {
@@ -133,18 +118,17 @@ export default function EmotionFaceMatchGamePage() {
         } else {
           finishGame();
         }
-      }, 1800);
+      }, 2500);
     } else {
-      // Wrong Path
       wrongCountRef.current += 1;
       setFeedback({
         type: "info",
-        message: "Good try! Let's try again together."
+        message: "Nice try! Let's look again."
       });
 
       setTimeout(() => {
-        setFeedback({ type: null, message: "Choose the answer you think is correct." });
-      }, 1800);
+        setFeedback({ type: null, message: "Let's think together!" });
+      }, 2500);
     }
   };
 
@@ -229,64 +213,75 @@ export default function EmotionFaceMatchGamePage() {
   }
 
   return (
-    <main className="min-h-screen relative flex flex-col overflow-hidden">
+    <main className="min-h-screen relative flex flex-col overflow-y-auto bg-slate-50">
       <CalmBackground />
 
-      <EmotionGameHeader
-        childName={child?.child_name || "Child"}
-        levelConfig={levelConfig}
-        currentRound={currentRound}
-        childId={params.childId}
-      />
+      {/* Progress Section */}
+      <div className="relative z-10 pt-4 px-4">
+        <EmotionProgressBar
+          currentRound={currentRound}
+          totalRounds={levelConfig.rounds}
+        />
+      </div>
 
-      <EmotionProgressBar
-        currentRound={currentRound}
-        totalRounds={levelConfig.rounds}
-      />
-
-      <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-8 sm:space-y-12">
+      <div className="flex-1 py-12 px-6 flex flex-col items-center justify-center">
         {question && (
-          <div className="w-full max-w-5xl mx-auto flex flex-col items-center gap-12">
-            <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
-              {/* Left Side: Lumi feedback */}
-              <div className="order-2 lg:order-1 w-full lg:w-1/3 flex justify-center">
-                <LumiMascot
-                  state={feedback.type === "success" ? "correct" : feedback.type === "info" ? "incorrect" : "normal"}
-                  message={feedback.message}
-                  size="md"
-                />
-              </div>
+          <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
 
-              {/* Center: Question Card */}
-              <div className="order-1 lg:order-2 w-full lg:w-1/2">
-                <div className="space-y-6 flex flex-col items-center w-full">
-                  <EmotionPromptCard question={question} feedbackVisible={!!feedback.message} />
-                </div>
+            {/* Left Column: Mascot Guide */}
+            <div className="lg:w-5/12 flex flex-col items-center justify-center space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+              <LumiMascot
+                state={feedback.type === "success" ? "correct" : feedback.type === "info" ? "incorrect" : "normal"}
+                size="xl"
+                className="scale-75 sm:scale-90 lg:scale-100 transition-transform duration-700"
+              />
+              <div className="bg-white/90 backdrop-blur-sm border-4 border-white px-6 lg:px-10 py-4 lg:py-6 rounded-[2.5rem] lg:rounded-[3rem] shadow-premium relative -mt-8 lg:mt-0">
+                <p className="text-xl lg:text-3xl font-black text-slate-800 tracking-tight text-center">
+                  {feedback.message}
+                </p>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-white border-l-4 border-t-4 border-white rotate-45" />
               </div>
             </div>
 
-            {/* Bottom: Answer Grid */}
-            <div className="w-full space-y-8 pb-12">
+            {/* Right Column: Game Activity */}
+            <div className="lg:w-7/12 flex flex-col gap-10 bg-white/40 backdrop-blur-lg p-8 sm:p-12 rounded-[4rem] border-8 border-white shadow-premium">
+              {/* Question Header */}
               <div className="text-center">
-                <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+                <h2 className="text-2xl sm:text-4xl font-black text-slate-800 tracking-tight">
                   {question.instruction}
                 </h2>
               </div>
 
-              <EmotionAnswerGrid
-                options={question.options.map(id => EMOTIONS[id])}
-                onAnswer={handleAnswer}
-                disabled={!!feedback.type}
-                level={level}
-              />
+              <div className="flex flex-col items-center gap-6">
+                <EmotionPromptCard question={question} feedbackVisible={!!feedback.type} />
+              </div>
+
+              <div className="w-full">
+                <EmotionAnswerGrid
+                  options={question.options.map(id => EMOTIONS[id])}
+                  onAnswer={handleAnswer}
+                  disabled={!!feedback.type}
+                  level={level}
+                />
+              </div>
             </div>
           </div>
         )}
       </div>
 
+      {/* Back Button */}
+      <button
+        onClick={() => router.push(`/games/${params.childId}`)}
+        className="absolute bottom-6 left-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-white transition-all shadow-sm z-20"
+      >
+        <svg className="w-6 h-6 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
       {levelConfig.timerEnabled && (
-        <div className="px-6 py-4 bg-white/40 backdrop-blur-md border-t border-white/60 text-center">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em]">Speed Challenge Active ⚡</p>
+        <div className="absolute bottom-4 right-20 px-4 py-2 bg-blue-500/10 backdrop-blur-md rounded-full border border-blue-200">
+          <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Speed Challenge Active ⚡</p>
         </div>
       )}
     </main>

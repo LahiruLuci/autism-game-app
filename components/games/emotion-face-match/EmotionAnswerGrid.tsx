@@ -11,46 +11,35 @@ type EmotionAnswerGridProps = {
 };
 
 export function EmotionAnswerGrid({ options, onAnswer, disabled, level }: EmotionAnswerGridProps) {
-  // Grid layout logic based on level
-  const gridCols = level === 1
-    ? "grid-cols-2 max-w-md mx-auto"
-    : level === 2
-      ? "grid-cols-2 max-w-lg mx-auto"
-      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 max-w-5xl mx-auto";
-
   return (
-    <div className={`grid gap-4 sm:gap-6 w-full px-4 ${gridCols}`}>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap lg:justify-center gap-6 w-full mx-auto">
       {options.map((emotion, index) => (
         <motion.button
           key={emotion.id}
-          initial={{ opacity: 0, scale: 0.9, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{
             delay: index * 0.05,
-            duration: 0.4,
-            type: "spring",
-            stiffness: 260,
-            damping: 20
+            duration: 0.8,
+            ease: "easeInOut"
           }}
-          whileHover={!disabled ? { scale: 1.05, y: -4 } : {}}
-          whileTap={!disabled ? { scale: 0.95 } : {}}
+          whileHover={!disabled ? { scale: 1.02 } : {}}
+          whileTap={!disabled ? { scale: 0.98 } : {}}
           disabled={disabled}
           onClick={() => onAnswer(emotion.label)}
           className={`
-            group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all duration-300
+            group relative flex flex-col items-center justify-center p-6 sm:p-12 lg:p-16 
+            rounded-[2rem] sm:rounded-[3rem] border-4 transition-all duration-500
             disabled:opacity-40 disabled:cursor-not-allowed
-            shadow-sm hover:shadow-xl hover:ring-8 ${emotion.color}
+            shadow-xl ${emotion.color} border-white
           `}
         >
-          {/* Decorative background element */}
-          <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]" />
-
-          <span className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500 drop-shadow-md">
-            {emotion.emoji}
-          </span>
-          <span className="font-black text-xs uppercase tracking-[0.25em] relative z-10">
+          <span className="font-black text-2xl sm:text-3xl uppercase tracking-[0.2em] relative z-10 text-slate-800/80">
             {emotion.label}
           </span>
+
+          {/* Visual selection hint */}
+          <div className="absolute inset-0 border-8 border-transparent group-hover:border-white/40 rounded-[3rem] transition-colors" />
         </motion.button>
       ))}
     </div>

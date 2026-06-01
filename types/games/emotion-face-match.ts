@@ -1,6 +1,6 @@
 import { GameArea } from "../game";
 
-export type EmotionId = "happy" | "sad" | "angry" | "surprised" | "scared";
+export type EmotionId = "happy" | "sad" | "angry" | "surprised" | "scared" | "calm";
 
 export interface Emotion {
   id: EmotionId;

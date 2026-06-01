@@ -31,16 +31,14 @@ export function LumiMascot({ mode, state = "normal", message, size = "md", class
         <div className={`relative flex flex-col items-center select-none ${className}`}>
             <motion.div
                 key={state}
-                initial={{ scale: 0.95, opacity: 0 }}
+                initial={{ scale: 0.98, opacity: 0 }}
                 animate={{
                     scale: 1,
                     opacity: 1,
-                    y: effectiveMode === "idle" ? [0, -4, 0] : effectiveMode === "happy" ? [0, -10, 0] : [0, -2, 0],
                 }}
                 transition={{
-                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                    scale: { duration: 0.4 },
-                    opacity: { duration: 0.4 }
+                    duration: 1.5,
+                    ease: "easeInOut"
                 }}
                 className={`${sizes[size]} relative z-10`}
             >

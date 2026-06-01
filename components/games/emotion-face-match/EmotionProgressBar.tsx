@@ -11,21 +11,17 @@ export function EmotionProgressBar({ currentRound, totalRounds }: EmotionProgres
   const progress = (currentRound / totalRounds) * 100;
 
   return (
-    <div className="fixed top-24 left-1/2 -translate-x-1/2 w-full max-w-md px-6 pointer-events-none z-40">
-      <div className="h-2 w-full bg-slate-200/40 backdrop-blur-md rounded-full relative overflow-hidden border border-white/40 shadow-inner">
+    <div className="w-full max-w-md mx-auto px-6 py-4">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Question {currentRound} of {totalRounds}</span>
+      </div>
+      <div className="h-3 bg-slate-100 rounded-full relative overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 1.2, type: "spring", stiffness: 50, damping: 20 }}
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full"
-        >
-          {/* Animated shimmer effect */}
-          <motion.div
-            animate={{ x: ["-100%", "200%"] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full"
-          />
-        </motion.div>
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="absolute inset-y-0 left-0 bg-blue-400 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.3)]"
+        />
       </div>
     </div>
   );

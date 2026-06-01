@@ -2,7 +2,7 @@
 
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Backend Helpers
 import { getChildForCurrentParent } from "@/lib/children";
@@ -23,7 +23,7 @@ import { StoryHeader } from "@/components/games/emotion-story-choice/StoryHeader
 import { StoryProgressBar } from "@/components/games/emotion-story-choice/StoryProgressBar";
 import { StoryCard } from "@/components/games/emotion-story-choice/StoryCard";
 import { StoryAnswerGrid } from "@/components/games/emotion-story-choice/StoryAnswerGrid";
-import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
+import { LumiMascot } from "@/components/games/redesign/LumiMascot";
 import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 
 // Types
@@ -111,14 +111,14 @@ export default function EmotionStoryChoicePage() {
         } else {
           finishGame(correctCount + 1, wrongCount, attempts + 1);
         }
-      }, 2000);
+      }, 2500);
     } else {
       setWrongCount(prev => prev + 1);
       setFeedback({ type: "incorrect", visible: true });
 
       setTimeout(() => {
         setFeedback({ type: null, visible: false });
-      }, 2000);
+      }, 2500);
     }
   };
 
@@ -152,6 +152,12 @@ export default function EmotionStoryChoicePage() {
       setGameState("error");
     }
   };
+
+  const mascotMessage = !feedback.visible
+    ? "Let's think together!"
+    : feedback.type === "correct"
+      ? "Great job! You got it!"
+      : "Nice try! Let's look again.";
 
   // Render Logic
   if (gameState === "loading") {
@@ -203,39 +209,65 @@ export default function EmotionStoryChoicePage() {
   }
 
   return (
-    <main className="min-h-screen relative flex flex-col overflow-hidden">
+    <main className="min-h-screen relative flex flex-col overflow-y-auto bg-slate-50">
       <CalmBackground />
 
-      <StoryHeader
-        childName={child?.child_name || "Child"}
-        levelConfig={levelConfig}
-        currentRound={currentRound}
-        childId={params.childId}
-      />
+      <div className="relative z-10 pt-4 px-4">
+        <StoryProgressBar
+          currentRound={currentRound}
+          totalRounds={levelConfig.rounds}
+        />
+      </div>
 
-      <StoryProgressBar
-        currentRound={currentRound}
-        totalRounds={levelConfig.rounds}
-      />
-
-      <div className="flex-1 flex flex-col items-center justify-start p-6 pt-12 space-y-12">
+      <div className="flex-1 py-12 px-6 flex flex-col items-center justify-center">
         {story && (
-          <>
-            <div className="w-full space-y-8 flex flex-col items-center">
-              <MascotFeedbackBar feedbackType={feedback.type} />
-              <StoryCard story={story} />
+          <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
+
+            {/* Left Column: Mascot Guide */}
+            <div className="lg:w-5/12 flex flex-col items-center justify-center space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+              <LumiMascot
+                state={feedback.type === "correct" ? "correct" : feedback.type === "incorrect" ? "incorrect" : "normal"}
+                size="xl"
+                className="scale-75 sm:scale-90 lg:scale-100 transition-transform duration-700"
+              />
+              <div className="bg-white/90 backdrop-blur-sm border-4 border-white px-6 lg:px-10 py-4 lg:py-6 rounded-[2.5rem] lg:rounded-[3rem] shadow-premium relative -mt-8 lg:mt-0">
+                <p className="text-xl lg:text-3xl font-black text-slate-800 tracking-tight text-center">
+                  {mascotMessage}
+                </p>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-white border-l-4 border-t-4 border-white rotate-45" />
+              </div>
             </div>
 
-            <div className="w-full space-y-8 pb-12">
-              <StoryAnswerGrid
-                options={story.options}
-                onAnswer={handleAnswer}
-                disabled={feedback.visible}
-              />
+            {/* Right Column: Game Card + Answer Grid */}
+            <div className="lg:w-7/12 flex flex-col gap-10 bg-white/40 backdrop-blur-lg p-8 sm:p-12 rounded-[4rem] border-8 border-white shadow-premium w-full">
+              {/* Row 2, 3, 4: Integrated Story Card */}
+              <div className="flex flex-col items-center gap-6">
+                <StoryCard story={story} />
+              </div>
+
+              {/* Row 5: Answer Choices */}
+              <div className="w-full">
+                <StoryAnswerGrid
+                  options={story.options}
+                  onAnswer={handleAnswer}
+                  disabled={feedback.visible}
+                />
+              </div>
             </div>
-          </>
+
+          </div>
         )}
       </div>
+
+      {/* Back Button - Discreet */}
+      <button
+        onClick={() => router.push(`/games/${params.childId}`)}
+        className="absolute bottom-6 left-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-white transition-all shadow-sm z-20"
+      >
+        <svg className="w-6 h-6 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </main>
   );
 }

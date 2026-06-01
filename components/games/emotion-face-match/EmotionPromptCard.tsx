@@ -1,8 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Emotion } from "@/types/games/emotion-face-match";
-
 import { EmotionQuestion } from "@/types/games/emotion-face-match";
 
 type EmotionPromptCardProps = {
@@ -14,56 +12,45 @@ export function EmotionPromptCard({ question, feedbackVisible }: EmotionPromptCa
   const isFace = question.promptType === "face";
 
   return (
-    <div className="relative w-full max-w-lg mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto">
       <AnimatePresence mode="wait">
         <motion.div
           key={question.id}
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 1.1, y: -20 }}
-          transition={{
-            duration: 0.7,
-            type: "spring",
-            stiffness: 100,
-            damping: 20
-          }}
-          className={`
-            w-full min-h-[16rem] sm:min-h-[22rem] rounded-[3.5rem] p-10 text-center
-            bg-white/70 backdrop-blur-2xl border border-white/80 shadow-premium
-            flex flex-col items-center justify-center relative overflow-hidden
-          `}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.8 }}
+          className="w-full flex flex-col items-center gap-6"
         >
-          {/* Subtle inner glow */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-50/10 via-transparent to-purple-50/10 pointer-events-none" />
-
-          {isFace ? (
+          {/* Illustration Area */}
+          <div className="h-28 sm:h-32 flex items-center justify-center text-7xl sm:text-8xl">
             <motion.span
-              initial={{ scale: 0.5, rotate: -10 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="relative z-10 text-[9rem] sm:text-[11rem] drop-shadow-xl select-none"
+              key={isFace ? question.visual : "text"}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.8 }}
             >
-              {question.visual}
+              {isFace ? question.visual : "📖"}
             </motion.span>
-          ) : (
-            <div className="space-y-6 relative z-10">
-              <motion.div
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-3xl mx-auto shadow-sm"
-              >
-                📖
-              </motion.div>
-              <p className="text-2xl sm:text-4xl font-display font-medium text-slate-800 leading-[1.3] px-4">
+          </div>
+
+          {/* Situation Text (if applicable) */}
+          {!isFace && (
+            <div className="px-6 text-center">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
                 "{question.situation}"
-              </p>
+              </h2>
             </div>
           )}
+
+          {/* Question Label */}
+          <div className="pt-2">
+            <span className="px-6 py-2 rounded-full bg-slate-100 text-slate-500 font-black text-xs uppercase tracking-[0.2em]">
+              How do they feel?
+            </span>
+          </div>
         </motion.div>
       </AnimatePresence>
-
-      {/* Dynamic Aura background */}
-      <div className="absolute inset-0 bg-blue-100/20 blur-[100px] -z-10 rounded-full animate-pulse-slow" />
     </div>
   );
 }

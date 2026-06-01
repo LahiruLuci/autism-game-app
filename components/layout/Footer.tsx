@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Logo from "./Logo";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isGamePage = pathname?.includes("/games/");
+
+  if (isGamePage) return null;
+
   return (
     <footer className="border-t border-slate-200 bg-white pt-16 pb-8 relative z-10">
       <div className="layout-container flex flex-col lg:flex-row justify-between items-center gap-10">

@@ -13,36 +13,39 @@ export function StoryCard({ story }: StoryCardProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={story.id}
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 1.05, y: -20 }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="w-full bg-white rounded-[3rem] border border-slate-100 shadow-2xl shadow-blue-900/5 overflow-hidden"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.8 }}
+          className="w-full flex flex-col items-center gap-6"
         >
-          {/* Illustration Area */}
-          <div className="h-48 sm:h-64 bg-gradient-to-br from-blue-50/50 to-violet-50/50 flex items-center justify-center text-8xl sm:text-9xl border-b border-slate-50">
+          {/* Row 2: Illustration Area - Compact but clear */}
+          <div className="h-28 sm:h-32 flex items-center justify-center text-7xl sm:text-8xl">
             <motion.span
-              initial={{ scale: 0.8 }}
+              key={story.illustration}
+              initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+              transition={{ duration: 0.8 }}
             >
               {story.illustration}
             </motion.span>
           </div>
-          
-          {/* Text Content */}
-          <div className="p-8 sm:p-12 text-center space-y-4">
-            <p className="text-2xl sm:text-3xl font-display font-bold text-slate-800 leading-tight">
-              "{story.situation}"
-            </p>
-            <div className="w-12 h-1 bg-blue-100 mx-auto rounded-full" />
-            <p className="text-slate-500 font-medium">How does the child feel?</p>
+
+          {/* Row 3: Story Text Content - Focused */}
+          <div className="px-6 text-center space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+              {story.situation}
+            </h2>
+          </div>
+
+          {/* Row 4: Question */}
+          <div className="pt-2">
+            <span className="px-6 py-2 rounded-full bg-slate-100 text-slate-500 font-black text-xs uppercase tracking-[0.2em]">
+              How do they feel?
+            </span>
           </div>
         </motion.div>
       </AnimatePresence>
-      
-      {/* Decorative background glow */}
-      <div className="absolute inset-0 bg-blue-100/10 blur-3xl -z-10 rounded-full scale-110" />
     </div>
   );
 }

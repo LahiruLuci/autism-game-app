@@ -27,7 +27,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child gets a new toy.",
       correctAnswer: "happy",
       options: ["happy", "sad"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv1-q4",
@@ -36,7 +36,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child lost their favorite toy.",
       correctAnswer: "sad",
       options: ["happy", "sad"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv1-q5",
@@ -56,7 +56,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child is playing with friends.",
       correctAnswer: "happy",
       options: ["happy", "sad", "angry", "surprised"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv2-q2",
@@ -65,7 +65,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child cannot find their book.",
       correctAnswer: "sad",
       options: ["happy", "sad", "angry", "surprised"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv2-q3",
@@ -92,7 +92,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child's toy was taken by someone else.",
       correctAnswer: "angry",
       options: ["happy", "sad", "angry", "surprised"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv2-q6",
@@ -101,7 +101,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child gets a surprise gift!",
       correctAnswer: "surprised",
       options: ["happy", "sad", "angry", "surprised"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv2-q7",
@@ -113,7 +113,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       instruction: "How does this face feel?"
     },
     {
-      id: "lv2-q8",
+      id: "lv2-getQuestionsForEmotionLevel8",
       emotionId: "sad",
       promptType: "face",
       visual: "☹️",
@@ -139,7 +139,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child hears a loud noise in the dark.",
       correctAnswer: "scared",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv3-q3",
@@ -148,7 +148,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child's drawing was ruined.",
       correctAnswer: "angry",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv3-q4",
@@ -157,7 +157,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A friend jumps out and says 'Boo!' gently.",
       correctAnswer: "surprised",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv3-q5",
@@ -166,7 +166,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child's balloon flew away.",
       correctAnswer: "sad",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv3-q6",
@@ -175,7 +175,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child is eating their favorite ice cream.",
       correctAnswer: "happy",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     },
     {
       id: "lv3-q7",
@@ -193,7 +193,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       visual: "💢",
       correctAnswer: "angry",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does this feel?"
+      instruction: "How does this face feel?"
     },
     {
       id: "lv3-q9",
@@ -211,7 +211,7 @@ export const EMOTION_FACE_MATCH_QUESTIONS: Record<number, EmotionQuestion[]> = {
       situation: "A child learned how to ride a bike.",
       correctAnswer: "happy",
       options: ["happy", "sad", "angry", "surprised", "scared"],
-      instruction: "How does the child feel?"
+      instruction: "How do they feel?"
     }
   ]
 };

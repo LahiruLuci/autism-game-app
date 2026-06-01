@@ -211,13 +211,15 @@ export default function MemoryMatchPage() {
     <main className="min-h-screen relative overflow-hidden bg-slate-50">
       <CalmBackground />
 
-      {/* Header */}
-      <MemoryGameHeader
-        childId={params.childId}
-        childName={child?.child_name || "Adventurer"}
-        score={score}
-        level={level}
-      />
+      {/* Header - Only show when playing */}
+      {gameState !== "start" && (
+        <MemoryGameHeader
+          childId={params.childId}
+          childName={child?.child_name || "Adventurer"}
+          score={score}
+          level={level}
+        />
+      )}
 
       <div className="relative z-10 w-full max-w-4xl mx-auto pb-20">
         {gameState === "start" && (
