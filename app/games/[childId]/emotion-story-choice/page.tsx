@@ -24,6 +24,7 @@ import { StoryProgressBar } from "@/components/games/emotion-story-choice/StoryP
 import { StoryCard } from "@/components/games/emotion-story-choice/StoryCard";
 import { StoryAnswerGrid } from "@/components/games/emotion-story-choice/StoryAnswerGrid";
 import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 
 // Types
 import type { ChildProfile } from "@/types/child";
@@ -163,39 +164,21 @@ export default function EmotionStoryChoicePage() {
 
   if (gameState === "start") {
     return (
-      <main className="min-h-screen relative flex items-center justify-center p-4">
-        <CalmBackground />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-white/60 backdrop-blur-2xl rounded-[3rem] p-10 shadow-2xl shadow-blue-900/5 border border-white/80 text-center"
-        >
-          <div className="w-20 h-20 rounded-[2rem] bg-white border border-slate-100 flex items-center justify-center text-4xl mx-auto mb-6 shadow-sm">📖</div>
-          <div className="space-y-3 mb-8">
-            <span className="px-4 py-1 rounded-full bg-orange-50 text-orange-600 text-[10px] font-bold uppercase tracking-widest border border-orange-100">
-              Level {level} — {levelConfig.label}
-            </span>
-            <h1 className="font-display text-3xl font-bold text-slate-900 leading-tight">Story Choice</h1>
-            <p className="text-slate-500 font-medium leading-relaxed">
-              Hello {child?.child_name}! Let's read some short stories and find the feelings together.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={startGame}
-              className="inline-flex items-center justify-center py-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-extrabold shadow-lg shadow-orange-200 hover:shadow-xl hover:scale-[1.02] transition-all"
-            >
-              Open Storybook
-            </button>
-            <button
-              onClick={() => router.push(`/games/${params.childId}`)}
-              className="inline-flex items-center justify-center py-5 rounded-full bg-white/80 text-slate-600 text-sm font-bold hover:bg-white transition-all"
-            >
-              Back to Games
-            </button>
-          </div>
-        </motion.div>
-      </main>
+      <GameIntroScreen
+        title="Let's Read Together!"
+        description="Read a short story and choose how the character feels."
+        level={level}
+        levelLabel={levelConfig.label}
+        mascotImage="/images/games/emotion-story.png"
+        buttonText="Start Story Adventure"
+        onStart={startGame}
+        onBack={() => router.push(`/games/${params.childId}`)}
+        accentColor="orange"
+        chips={[
+          { icon: "⭐", text: "Earn Stars" },
+          { icon: "😊", text: "Learn Feelings" }
+        ]}
+      />
     );
   }
 

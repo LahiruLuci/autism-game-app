@@ -10,7 +10,7 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Components
 import { ChoiceAdventureHeader } from "@/components/games/personal-choice-adventure/ChoiceAdventureHeader";
-import { ChoiceStartScreen } from "@/components/games/personal-choice-adventure/ChoiceStartScreen";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 import { ScenarioCard } from "@/components/games/personal-choice-adventure/ScenarioCard";
 import { ChoiceCardGrid } from "@/components/games/personal-choice-adventure/ChoiceCardGrid";
 import { ChoiceProgress } from "@/components/games/personal-choice-adventure/ChoiceProgress";
@@ -210,9 +210,21 @@ export default function PersonalChoiceAdventurePage() {
 
       <div className="relative z-10 flex-1 flex flex-col">
         {gameState === "start" && (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <ChoiceStartScreen onStart={startGame} level={level} />
-          </div>
+          <GameIntroScreen
+            title="Your Adventure Choice!"
+            description="Look at each situation and choose what you would do. You decide the path!"
+            level={level}
+            levelLabel={levelConfig.rounds + " Scenarios"}
+            mascotImage="/images/games/personal-choice.png"
+            buttonText="Start My Adventure"
+            onStart={startGame}
+            onBack={() => router.push(`/games/${params.childId}`)}
+            accentColor="rose"
+            chips={[
+              { icon: "🌈", text: "Make Choices" },
+              { icon: "✨", text: "Explore Life" }
+            ]}
+          />
         )}
 
         {gameState === "playing" && scenarios.length > 0 && (

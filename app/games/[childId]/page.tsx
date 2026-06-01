@@ -113,7 +113,7 @@ export default function GamesPage() {
       <JourneyBackground />
 
       {/* Subtle Back Link */}
-      <div className="max-w-7xl mx-auto px-6 py-8 relative z-50">
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-2 relative z-50">
         <Link
           href={`/children/${params.childId}`}
           className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-500 hover:bg-white/60 transition-all duration-500"

@@ -24,6 +24,7 @@ import { EmotionProgressBar } from "@/components/games/emotion-face-match/Emotio
 import { EmotionPromptCard } from "@/components/games/emotion-face-match/EmotionPromptCard";
 import { EmotionAnswerGrid } from "@/components/games/emotion-face-match/EmotionAnswerGrid";
 import { LumiMascot } from "@/components/games/redesign/LumiMascot";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 
 // Types
 import type { ChildProfile } from "@/types/child";
@@ -189,53 +190,21 @@ export default function EmotionFaceMatchGamePage() {
 
   if (gameState === "start") {
     return (
-      <main className="min-h-screen relative flex items-center justify-center p-4">
-        <CalmBackground />
-
-        <div className="max-w-4xl w-full flex flex-col md:flex-row items-center justify-center gap-12 relative z-10">
-          {/* Welcome Mascot */}
-          <div className="w-full md:w-1/2 flex justify-center">
-            <LumiMascot state="normal" message={`Hi ${child?.child_name?.split(" ")[0]}! Ready to explore emotions?`} size="lg" />
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="w-full md:w-1/2 bg-white/60 backdrop-blur-2xl rounded-[3.5rem] p-12 shadow-premium border border-white/80 space-y-8"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-2xl">🎭</span>
-                <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest border border-blue-100">
-                  Level {level} — {levelConfig.label}
-                </span>
-              </div>
-              <h1 className="font-display text-4xl font-black text-slate-900 leading-tight">Emotion Face Match</h1>
-              <p className="text-lg text-slate-500 font-medium leading-relaxed">
-                Let's match faces to feelings together. We have {levelConfig.rounds} fun rounds ahead!
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-4 pt-4">
-              <button
-                onClick={startGame}
-                className="group inline-flex items-center justify-center gap-3 py-6 rounded-full bg-slate-900 text-white text-sm font-black uppercase tracking-widest shadow-2xl shadow-blue-900/10 hover:bg-blue-600 hover:scale-[1.02] transition-all duration-500"
-              >
-                <span>Start Exploring</span>
-                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
-              <button
-                onClick={() => router.push(`/games/${params.childId}`)}
-                className="inline-flex items-center justify-center py-5 rounded-full bg-white/50 text-slate-500 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-slate-700 transition-all"
-              >
-                Choose Another Game
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </main>
+      <GameIntroScreen
+        title="Emotion Face Match"
+        description="Let's match faces to feelings together. We have fun rounds ahead!"
+        level={level}
+        levelLabel={levelConfig.label}
+        mascotImage="/images/games/emotion-face-match.png"
+        buttonText="Start Exploring"
+        onStart={startGame}
+        onBack={() => router.push(`/games/${params.childId}`)}
+        accentColor="blue"
+        chips={[
+          { icon: "⭐", text: "Earn Stars" },
+          { icon: "😊", text: "Learn Feelings" }
+        ]}
+      />
     );
   }
 

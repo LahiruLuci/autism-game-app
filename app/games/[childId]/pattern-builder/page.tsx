@@ -10,7 +10,7 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Pattern Builder Components
 import { PatternGameHeader } from "@/components/games/pattern-builder/PatternGameHeader";
-import { PatternStartScreen } from "@/components/games/pattern-builder/PatternStartScreen";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 import { PatternSequenceCard } from "@/components/games/pattern-builder/PatternSequenceCard";
 import { PatternAnswerGrid } from "@/components/games/pattern-builder/PatternAnswerGrid";
 import { PatternProgress } from "@/components/games/pattern-builder/PatternProgress";
@@ -206,7 +206,21 @@ export default function PatternBuilderPage() {
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         {gameState === "start" && (
-          <PatternStartScreen onStart={startGame} level={level} />
+          <GameIntroScreen
+            title="Complete the Pattern!"
+            description="Look at the sequence and find what comes next. Let's build it together!"
+            level={level}
+            levelLabel={levelConfig.totalRounds + " Rounds"}
+            mascotImage="/images/games/pattern-builder.png"
+            buttonText="Start Building Patterns"
+            onStart={startGame}
+            onBack={() => router.push(`/games/${params.childId}`)}
+            accentColor="blue"
+            chips={[
+              { icon: "🧩", text: "Solve Puzzles" },
+              { icon: "🎨", text: "Match Patterns" }
+            ]}
+          />
         )}
 
         {gameState === "playing" && questions.length > 0 && (

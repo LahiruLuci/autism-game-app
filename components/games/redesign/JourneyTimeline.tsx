@@ -53,7 +53,7 @@ export function JourneyTimeline({ childId, games }: JourneyTimelineProps) {
   const areaOrder = ["emotion", "cognitive", "self_awareness", "mathematical"];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 space-y-32">
+    <div className="max-w-7xl mx-auto px-6 pt-4 pb-12 space-y-24">
       {/* Reusable Mascot Welcome - Simplified */}
       <MascotGuide
         message="Hi friend! Let's pick a fun game."

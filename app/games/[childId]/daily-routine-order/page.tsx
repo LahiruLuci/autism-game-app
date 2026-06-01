@@ -12,7 +12,7 @@ import { Undo2, CheckCircle2 } from "lucide-react";
 
 // Routine Order Components
 import { RoutineGameHeader } from "@/components/games/daily-routine-order/RoutineGameHeader";
-import { RoutineStartScreen } from "@/components/games/daily-routine-order/RoutineStartScreen";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 import { RoutineMixedSteps } from "@/components/games/daily-routine-order/RoutineMixedSteps";
 import { RoutineSelectedOrder } from "@/components/games/daily-routine-order/RoutineSelectedOrder";
 import { RoutineProgress } from "@/components/games/daily-routine-order/RoutineProgress";
@@ -228,7 +228,21 @@ export default function DailyRoutineOrderPage() {
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         {gameState === "start" && (
-          <RoutineStartScreen onStart={startGame} level={level} />
+          <GameIntroScreen
+            title="What Happens First?"
+            description="Look at the mixed steps and tap them in the order they happen."
+            level={level}
+            levelLabel={levelConfig.stepsPerRoutine + " Steps"}
+            mascotImage="/images/games/daily-routine.png"
+            buttonText="Start Routine Adventure"
+            onStart={startGame}
+            onBack={() => router.push(`/games/${params.childId}`)}
+            accentColor="orange"
+            chips={[
+              { icon: "⭐", text: "Learn Order" },
+              { icon: "🌞", text: "Daily Skills" }
+            ]}
+          />
         )}
 
         {gameState === "playing" && routines.length > 0 && (

@@ -10,7 +10,7 @@ import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Memory Match Redesign Components
 import { MemoryGameHeader } from "@/components/games/memory-match/MemoryGameHeader";
-import { MemoryStartScreen } from "@/components/games/memory-match/MemoryStartScreen";
+import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 import { MemoryCardGrid } from "@/components/games/memory-match/MemoryCardGrid";
 import { MemoryProgress } from "@/components/games/memory-match/MemoryProgress";
 import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
@@ -221,7 +221,21 @@ export default function MemoryMatchPage() {
 
       <div className="relative z-10 w-full max-w-4xl mx-auto pb-20">
         {gameState === "start" && (
-          <MemoryStartScreen onStart={startGame} level={level} />
+          <GameIntroScreen
+            title="Ready to Match?"
+            description="Find the matching cards to practice your memory and focus. Let's explore together!"
+            level={level}
+            levelLabel={levelConfig.pairsCount + " Pairs"}
+            mascotImage="/images/games/memory-match.png"
+            buttonText="Start Match Activity"
+            onStart={startGame}
+            onBack={() => router.push(`/games/${params.childId}`)}
+            accentColor="blue"
+            chips={[
+              { icon: "🧠", text: "Boost Memory" },
+              { icon: "🌟", text: "Practice Focus" }
+            ]}
+          />
         )}
 
         {gameState === "playing" && (
