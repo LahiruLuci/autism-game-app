@@ -52,7 +52,7 @@ export async function saveGameScore(input: SaveScoreInput, retryCount = 0) {
   } catch (error: any) {
     // Retry logic for network-related errors (like Failed to fetch)
     const isNetworkError = error?.message === "TypeError: Failed to fetch" || error?.message?.includes("fetch");
-    
+
     if (isNetworkError && retryCount < 2) {
       console.warn(`[BrightPath] Network issue detected. Retrying score save... (Attempt ${retryCount + 1})`);
       // Wait a short moment before retrying
@@ -74,6 +74,25 @@ export async function getGameScoreById(sessionId: string) {
 
   if (error) {
     console.error("[BrightPath] Error fetching game score:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function getPreviousGameScore(childId: string, gameId: string, currentSessionId: string) {
+  const { data, error } = await supabase
+    .from("game_scores")
+    .select("*")
+    .eq("child_id", childId)
+    .eq("game_id", gameId)
+    .neq("id", currentSessionId)
+    .order("played_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[BrightPath] Error fetching previous game score:", error);
     return null;
   }
 
