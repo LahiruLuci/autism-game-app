@@ -98,3 +98,47 @@ export async function getPreviousGameScore(childId: string, gameId: string, curr
 
   return data;
 }
+
+export async function getChildGameSummary(childId: string) {
+  const { data, error } = await supabase
+    .from("game_scores")
+    .select("correct_answers, attempts, played_at, level, area")
+    .eq("child_id", childId)
+    .order("played_at", { ascending: false });
+
+  if (error) {
+    console.error("[BrightPath] Error fetching child game summary:", error);
+    return null;
+  }
+
+  if (!data || data.length === 0) {
+    return {
+      totalGamesPlayed: 0,
+      latestActivityDate: null,
+      averageAccuracy: 0,
+      latestLevel: null,
+      latestArea: null
+    };
+  }
+
+  const totalGamesPlayed = data.length;
+  const latestActivityDate = data[0].played_at;
+  const latestLevel = data[0].level;
+  const latestArea = data[0].area;
+
+  let totalAccuracy = 0;
+  data.forEach(score => {
+    const accuracy = score.attempts > 0 ? (score.correct_answers / score.attempts) * 100 : 0;
+    totalAccuracy += accuracy;
+  });
+
+  const averageAccuracy = Math.round(totalAccuracy / totalGamesPlayed);
+
+  return {
+    totalGamesPlayed,
+    latestActivityDate,
+    averageAccuracy,
+    latestLevel,
+    latestArea
+  };
+}

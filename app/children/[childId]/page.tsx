@@ -15,6 +15,7 @@ import { AreaLevelGrid } from "@/components/children/AreaLevelGrid";
 import { QuickLearningStatus } from "@/components/children/QuickLearningStatus";
 import { ChildNotesCard } from "@/components/children/ChildNotesCard";
 import { ChildActionPanel } from "@/components/children/ChildActionPanel";
+import { getChildGameSummary } from "@/lib/game-scores";
 
 import type { ChildProfile } from "@/types/child";
 import type { AssessmentResult } from "@/types/survey";
@@ -22,9 +23,10 @@ import type { AssessmentResult } from "@/types/survey";
 export default function ChildDetailsPage() {
   const router = useRouter();
   const params = useParams<{ childId: string }>();
-  
+
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [assessment, setAssessment] = useState<AssessmentResult | null>(null);
+  const [gameSummary, setGameSummary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,18 +37,20 @@ export default function ChildDetailsPage() {
 
     async function loadData() {
       try {
-        const [childResult, latestAssessment] = await Promise.all([
+        const [childResult, latestAssessment, summary] = await Promise.all([
           getChildForCurrentParent(params.childId),
           getLatestAssessmentForCurrentParent(params.childId).catch(() => null),
+          getChildGameSummary(params.childId).catch(() => null),
         ]);
 
         if (isMounted) {
           setChild(childResult.child);
           setAssessment(latestAssessment);
+          setGameSummary(summary);
         }
       } catch (error) {
         if (!isMounted) return;
-        
+
         if (error instanceof Error && error.message === "not_authenticated") {
           router.replace("/login");
           return;
@@ -98,16 +102,16 @@ export default function ChildDetailsPage() {
 
   // Determine if we should show area-wise mode
   // We show it if enabled AND the assessment has the required fields
-  const showAreaWiseMode = 
-    areaRecommendationsEnabled && 
-    assessment && 
-    assessment.main_support_area && 
+  const showAreaWiseMode =
+    areaRecommendationsEnabled &&
+    assessment &&
+    assessment.main_support_area &&
     assessment.strongest_area;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        
+
         {/* Navigation */}
         <nav className="mb-8">
           <Link
@@ -124,7 +128,7 @@ export default function ChildDetailsPage() {
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column: Profile & Assessment (Large) */}
           <div className="lg:col-span-8 space-y-8">
             <ChildProfileHero child={child} assessment={assessment} />
@@ -139,7 +143,7 @@ export default function ChildDetailsPage() {
                     <div className="space-y-4">
                       <h2 className="font-display text-2xl font-bold text-slate-900 flex items-center gap-2">
                         <span className="w-8 h-8 rounded-xl bg-violet-100 flex items-center justify-center text-sm">📊</span>
-                        Area Level Breakdown
+                        Skill Scores from Survey
                       </h2>
                       <AreaLevelGrid assessment={assessment} />
                     </div>
@@ -157,10 +161,10 @@ export default function ChildDetailsPage() {
           <div className="lg:col-span-4 space-y-8">
             <section className="space-y-4">
               <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-sm">⚡</span>
-                Quick Status
+                <span className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-sm">📊</span>
+                Learning Overview
               </h2>
-              <QuickLearningStatus assessment={assessment} />
+              <QuickLearningStatus assessment={assessment} gameSummary={gameSummary} />
             </section>
 
             <section className="space-y-4">
@@ -168,19 +172,26 @@ export default function ChildDetailsPage() {
                 <span className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center text-sm">🚀</span>
                 Next Actions
               </h2>
-              <ChildActionPanel childId={child.id} hasAssessment={!!assessment} />
+              <ChildActionPanel
+                childId={child.id}
+                hasAssessment={!!assessment}
+                gameSummary={gameSummary}
+              />
             </section>
 
-            {/* Supportive Help Card */}
-            <div className="rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-xl shadow-slate-200">
-              <p className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-3">Supportive Tip</p>
-              <h3 className="font-display text-xl font-bold mb-3 leading-tight">Consistency is key to development</h3>
-              <p className="text-slate-300 text-sm font-medium leading-relaxed mb-6">
-                Playing supportive games for just 15 minutes a day can help reinforce foundational skills and build confidence.
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-lg">💡</div>
-                <span className="text-xs font-bold text-slate-400">Try one game from each area!</span>
+            {/* Parent Tip Card */}
+            <div className="rounded-[2rem] bg-blue-50 border border-blue-100 p-8 text-slate-800 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100/50 rounded-full -mr-8 -mt-8" />
+              <div className="relative z-10">
+                <p className="text-blue-600 text-xs font-black uppercase tracking-[0.2em] mb-3">Parent Tip</p>
+                <h3 className="font-display text-xl font-bold mb-3 leading-tight">Short daily practice is better than long sessions</h3>
+                <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6">
+                  Try 10–15 minutes of learning games and keep the experience calm and positive for your child.
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-white border border-blue-100 flex items-center justify-center text-lg shadow-sm">💡</div>
+                  <span className="text-xs font-bold text-blue-700">Consistency builds confidence</span>
+                </div>
               </div>
             </div>
           </div>

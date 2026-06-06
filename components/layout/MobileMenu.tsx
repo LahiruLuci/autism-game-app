@@ -2,15 +2,23 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const menuLinks = [
+    { href: "/how-it-works", label: "How It Works" },
+    { href: "/development-areas", label: "Development Areas" },
+  ];
 
   return (
     <div className="md:hidden">
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900 rounded-xl transition-colors"
+        className={`p-2 rounded-xl transition-all ${isOpen ? "bg-slate-100 text-slate-900" : "text-slate-500 hover:bg-slate-50"
+          }`}
         aria-label="Toggle menu"
       >
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,12 +31,35 @@ export default function MobileMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[100%] left-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-premium py-6 px-6 flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 z-50">
-          <Link href="/#how-it-works" onClick={() => setIsOpen(false)} className="text-lg font-medium text-slate-600 hover:text-blue-600 p-2">How It Works</Link>
-          <Link href="/#development-areas" onClick={() => setIsOpen(false)} className="text-lg font-medium text-slate-600 hover:text-blue-600 p-2">Development Areas</Link>
-          <hr className="border-slate-100 my-2" />
-          <Link href="/login" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-700 hover:text-blue-600 p-2">Login</Link>
-          <Link href="/register" onClick={() => setIsOpen(false)} className="rounded-2xl bg-blue-400 px-5 py-4 text-center text-lg font-bold text-white shadow-sm hover:bg-blue-500 hover:shadow-md transition-all w-full mt-2">
+        <div className="absolute top-[100%] left-0 w-full bg-white border-b border-slate-200 shadow-premium py-6 px-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-4 z-50">
+          {menuLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`text-lg font-bold p-3 rounded-2xl transition-all ${isActive
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+          <hr className="border-slate-100 my-2 mx-3" />
+          <Link
+            href="/login"
+            onClick={() => setIsOpen(false)}
+            className={`text-lg font-bold p-3 rounded-2xl transition-all ${pathname === "/login"
+              ? "bg-blue-50 text-blue-600"
+              : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+              }`}
+          >
+            Login
+          </Link>
+          <Link href="/register" onClick={() => setIsOpen(false)} className="rounded-2xl bg-blue-500 px-5 py-4 text-center text-lg font-black text-white shadow-lg shadow-blue-200 hover:bg-blue-600 transition-all w-full mt-2">
             Get Started
           </Link>
         </div>
