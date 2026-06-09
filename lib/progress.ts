@@ -34,7 +34,7 @@ export interface RecentScore {
 export interface FamilyProgressSummary {
     totalChildren: number;
     totalActivities: number;
-    averageAccuracy: number;
+    familyAccuracy: number | null;
     childrenNeedingAttention: number;
 }
 
@@ -72,7 +72,7 @@ export async function getProgressDashboardData(): Promise<{
     if (children.length === 0) {
         return {
             children: [],
-            family: { totalChildren: 0, totalActivities: 0, averageAccuracy: 0, childrenNeedingAttention: 0 },
+            family: { totalChildren: 0, totalActivities: 0, familyAccuracy: null, childrenNeedingAttention: 0 },
             recentFeed: [],
             insights: [],
         };
@@ -137,19 +137,16 @@ export async function getProgressDashboardData(): Promise<{
     });
 
     // Family summary
-    const total = childrenData.reduce(
-        (acc, c) => {
-            acc.totalActivities += c.totalActivities;
-            acc.totalAccuracy += c.averageAccuracy;
-            return acc;
-        },
-        { totalActivities: 0, totalAccuracy: 0 }
-    );
+    const totalActivities = childrenData.reduce((sum, c) => sum + c.totalActivities, 0);
+    const activeChildren = childrenData.filter((c) => c.totalActivities > 0);
+    const familyAccuracy = activeChildren.length > 0
+        ? Math.round(activeChildren.reduce((sum, c) => sum + c.averageAccuracy, 0) / activeChildren.length)
+        : null;
 
     const family: FamilyProgressSummary = {
         totalChildren: children.length,
-        totalActivities: total.totalActivities,
-        averageAccuracy: children.length > 0 ? Math.round(total.totalAccuracy / children.length) : 0,
+        totalActivities,
+        familyAccuracy,
         childrenNeedingAttention: childrenData.filter((c) => c.needsAttention).length,
     };
 
@@ -176,11 +173,13 @@ function generateInsights(children: ChildProgressData[], family: FamilyProgressS
         insights.push({ text: `Most active learner this week: ${sorted[0].child.child_name}.`, type: "positive" });
     }
 
-    // Family average
-    if (family.averageAccuracy >= 80) {
-        insights.push({ text: `Family accuracy is strong at ${family.averageAccuracy}%. Keep up the great work!`, type: "positive" });
-    } else if (family.averageAccuracy > 0) {
-        insights.push({ text: `Family average accuracy is ${family.averageAccuracy}%. Consistent practice helps improve this over time.`, type: "neutral" });
+    // Family accuracy insight
+    if (family.familyAccuracy !== null) {
+        if (family.familyAccuracy >= 80) {
+            insights.push({ text: `Family accuracy is strong at ${family.familyAccuracy}%. Keep up the great work!`, type: "positive" });
+        } else {
+            insights.push({ text: `Family accuracy is ${family.familyAccuracy}%. Consistent daily practice helps improve this over time.`, type: "neutral" });
+        }
     }
 
     // Area insights - find most common area across all children

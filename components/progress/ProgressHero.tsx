@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Users, CheckCircle, TrendingUp, AlertCircle } from "lucide-react";
+import { Users, CheckCircle, TrendingUp, AlertCircle } from "lucide-react";
 import type { FamilyProgressSummary } from "@/lib/progress";
 
 interface ProgressHeroProps {
@@ -10,6 +10,10 @@ interface ProgressHeroProps {
 }
 
 export function ProgressHero({ parentName, family }: ProgressHeroProps) {
+    const accuracyDisplay = family.familyAccuracy !== null
+        ? `${family.familyAccuracy}%`
+        : "No activity yet";
+
     return (
         <section className="relative pt-10 md:pt-20 pb-10 md:pb-16 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,10 +50,10 @@ export function ProgressHero({ parentName, family }: ProgressHeroProps) {
                             className="relative grid grid-cols-2 gap-4 p-2"
                         >
                             {[
-                                { icon: <Users size={22} />, label: "Children", value: family.totalChildren, color: "text-blue-600", bg: "bg-blue-50" },
-                                { icon: <CheckCircle size={22} />, label: "Activities Done", value: family.totalActivities, color: "text-emerald-600", bg: "bg-emerald-50" },
-                                { icon: <TrendingUp size={22} />, label: "Avg. Accuracy", value: family.totalActivities > 0 ? `${family.averageAccuracy}%` : "—", color: "text-amber-600", bg: "bg-amber-50" },
-                                { icon: <AlertCircle size={22} />, label: "Need Attention", value: family.childrenNeedingAttention, color: "text-rose-600", bg: "bg-rose-50" },
+                                { icon: <Users size={22} />, label: "Total Children", value: family.totalChildren, color: "text-blue-600", bg: "bg-blue-50" },
+                                { icon: <CheckCircle size={22} />, label: "Activities Completed", value: family.totalActivities, color: "text-emerald-600", bg: "bg-emerald-50" },
+                                { icon: <TrendingUp size={22} />, label: "Family Accuracy", value: accuracyDisplay, color: "text-amber-600", bg: "bg-amber-50" },
+                                { icon: <AlertCircle size={22} />, label: "Children Needing Support", value: family.childrenNeedingAttention, color: "text-rose-600", bg: "bg-rose-50" },
                             ].map((card, idx) => (
                                 <div key={idx} className="bg-white/80 backdrop-blur border border-white rounded-[2rem] p-6 shadow-sm space-y-3">
                                     <div className={`w-11 h-11 rounded-xl ${card.bg} ${card.color} flex items-center justify-center`}>
