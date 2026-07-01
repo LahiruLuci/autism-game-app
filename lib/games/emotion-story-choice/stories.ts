@@ -94,6 +94,33 @@ export const EMOTION_STORIES: Story[] = [
     options: ["happy", "sad", "angry", "surprised"],
     supportiveHint: "It's frustrating when our work breaks."
   },
+  {
+    id: "s2-6",
+    level: 2,
+    situation: "A friend shares their favorite game.",
+    illustration: "🎮",
+    correctEmotion: "happy",
+    options: ["happy", "sad", "angry", "surprised"],
+    supportiveHint: "Sharing a fun activity can make us feel happy."
+  },
+  {
+    id: "s2-7",
+    level: 2,
+    situation: "The classroom lights turn off without warning.",
+    illustration: "💡",
+    correctEmotion: "surprised",
+    options: ["happy", "sad", "angry", "surprised"],
+    supportiveHint: "A sudden change can feel surprising."
+  },
+  {
+    id: "s2-8",
+    level: 2,
+    situation: "A child's drawing gets wet in the rain.",
+    illustration: "🖼️",
+    correctEmotion: "sad",
+    options: ["happy", "sad", "angry", "surprised"],
+    supportiveHint: "It can feel sad when something we made is damaged."
+  },
 
   // Level 3
   {
@@ -140,9 +167,57 @@ export const EMOTION_STORIES: Story[] = [
     correctEmotion: "scared",
     options: ["happy", "sad", "angry", "surprised", "scared"],
     supportiveHint: "New animals can sometimes be a bit scary."
+  },
+  {
+    id: "s3-6",
+    level: 3,
+    situation: "A child hears their name called in a quiet room.",
+    illustration: "📣",
+    correctEmotion: "surprised",
+    options: ["happy", "sad", "angry", "surprised", "scared"],
+    supportiveHint: "An unexpected sound can make us feel surprised."
+  },
+  {
+    id: "s3-7",
+    level: 3,
+    situation: "A friend says they do not want to play today.",
+    illustration: "🧩",
+    correctEmotion: "sad",
+    options: ["happy", "sad", "angry", "surprised", "scared"],
+    supportiveHint: "Being left out can make us feel sad."
+  },
+  {
+    id: "s3-8",
+    level: 3,
+    situation: "Someone pushes in front while the child is waiting.",
+    illustration: "🧍",
+    correctEmotion: "angry",
+    options: ["happy", "sad", "angry", "surprised", "scared"],
+    supportiveHint: "When something feels unfair, we may feel angry."
+  },
+  {
+    id: "s3-9",
+    level: 3,
+    situation: "A child finishes a difficult puzzle by themselves.",
+    illustration: "🏆",
+    correctEmotion: "happy",
+    options: ["happy", "sad", "angry", "surprised", "scared"],
+    supportiveHint: "Finishing something difficult can make us feel happy."
+  },
+  {
+    id: "s3-10",
+    level: 3,
+    situation: "The fire alarm makes a sudden loud sound at school.",
+    illustration: "🚨",
+    correctEmotion: "scared",
+    options: ["happy", "sad", "angry", "surprised", "scared"],
+    supportiveHint: "A sudden loud alarm can make us feel scared."
   }
 ];
 
 export function getStoriesForLevel(level: number): Story[] {
-  return EMOTION_STORIES.filter(s => s.level === level) || EMOTION_STORIES.filter(s => s.level === 1);
+  const stories = EMOTION_STORIES.filter((story) => story.level === level);
+  return stories.length > 0
+    ? stories
+    : EMOTION_STORIES.filter((story) => story.level === 1);
 }

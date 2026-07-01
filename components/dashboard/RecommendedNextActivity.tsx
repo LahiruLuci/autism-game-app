@@ -3,6 +3,7 @@
 import { RecommendedActivity } from "@/lib/dashboard";
 import { ArrowRight, Lightbulb } from "lucide-react";
 import Link from "next/link";
+import { getGameHref } from "@/lib/game-routes";
 
 interface RecommendedNextActivityProps {
   childId: string;
@@ -30,7 +31,11 @@ export function RecommendedNextActivity({ childId, recommendation }: Recommended
         </p>
         
         <Link 
-          href={`/games/${childId}/${recommendation.game.game_slug}?level=${recommendation.game.level}`}
+          href={getGameHref(
+            childId,
+            recommendation.game.game_slug,
+            recommendation.game.level,
+          )}
           className="mt-auto inline-flex items-center justify-center gap-2 w-full py-4 rounded-full bg-amber-500 text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-amber-500/20 hover:bg-amber-600 transition-colors"
         >
           Continue Recommended Activity

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Play, Star, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { GameWithUnlockState } from "@/types/game";
+import { getGameHref } from "@/lib/game-routes";
 
 interface RecommendedActivitiesProps {
     childId: string;
@@ -69,7 +70,7 @@ export function RecommendedActivities({ childId, childName, games }: Recommended
                                     </div>
 
                                     <Link
-                                        href={`/games/${childId}/${game.game_slug}`}
+                                        href={getGameHref(childId, game.game_slug, game.level)}
                                         className="inline-flex items-center justify-center h-14 w-full md:w-auto px-8 rounded-2xl bg-slate-900 text-white font-black text-sm uppercase tracking-widest hover:bg-blue-600 transition-all duration-300 gap-3 group/btn"
                                     >
                                         Launch Activity

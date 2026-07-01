@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GameWithUnlockState } from "@/types/game";
+import { getGameHref } from "@/lib/game-routes";
 
 type GameCardProps = {
   childId: string;
@@ -42,7 +43,7 @@ export function GameCard({ childId, game }: GameCardProps) {
 
           {isUnlocked ? (
             <Link
-              href={`/games/${childId}/${game.game_slug}?level=${game.level}`}
+              href={getGameHref(childId, game.game_slug, game.level)}
               className="inline-flex items-center justify-center w-full py-3 rounded-2xl bg-blue-500 text-white text-xs font-extrabold hover:bg-blue-600 transition-colors shadow-sm shadow-blue-100"
             >
               Start Game

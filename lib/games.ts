@@ -1,6 +1,7 @@
 import { supabase } from "./supabase";
 import { getLatestAssessmentForCurrentParent } from "./survey";
 import { isGameUnlocked } from "./game-unlock";
+import { getGameSlugVariants } from "./game-routes";
 import { Game, GameWithUnlockState } from "@/types/game";
 
 export async function getActiveGames() {
@@ -47,9 +48,10 @@ export async function getGameBySlugAndLevel(gameSlug: string, level: number) {
   const { data, error } = await supabase
     .from("games")
     .select("*")
-    .eq("game_slug", gameSlug)
+    .in("game_slug", getGameSlugVariants(gameSlug))
     .eq("level", level)
     .eq("is_active", true)
+    .limit(1)
     .maybeSingle();
 
   if (error) {

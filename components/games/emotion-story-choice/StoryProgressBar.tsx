@@ -7,20 +7,27 @@ type StoryProgressBarProps = {
   totalRounds: number;
 };
 
-export function StoryProgressBar({ currentRound, totalRounds }: StoryProgressBarProps) {
+export function StoryProgressBar({
+  currentRound,
+  totalRounds,
+}: StoryProgressBarProps) {
   const progress = (currentRound / totalRounds) * 100;
 
   return (
-    <div className="w-full max-w-md mx-auto px-6 py-4">
-      <div className="flex justify-between items-center mb-3">
-        <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Story {currentRound} of {totalRounds}</span>
+    <div className="w-full">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-black text-slate-700">
+          Story {currentRound} of {totalRounds}
+        </span>
+        <span className="text-xs font-bold text-slate-400">
+          {Math.round(progress)}%
+        </span>
       </div>
-      <div className="h-3 bg-slate-100 rounded-full relative overflow-hidden">
+      <div className="relative h-2 overflow-hidden rounded-full bg-orange-100">
         <motion.div
-          initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-y-0 left-0 bg-orange-400 rounded-full shadow-[0_0_10px_rgba(251,146,60,0.3)]"
+          transition={{ duration: 0.45, ease: "easeInOut" }}
+          className="absolute inset-y-0 left-0 rounded-full bg-orange-400"
         />
       </div>
     </div>

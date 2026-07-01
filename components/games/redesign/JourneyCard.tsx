@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Play, Lock, Sparkles } from "lucide-react";
 import type { GameWithUnlockState } from "@/types/game";
+import { getGameHref } from "@/lib/game-routes";
 
 interface JourneyCardProps {
   childId: string;
@@ -96,6 +97,9 @@ export function JourneyCard({ childId, game, isFirstUnlocked }: JourneyCardProps
           ? `${theme.bg} ${theme.border} shadow-[0_20px_40px_-20px_rgba(0,0,0,0.1)]`
           : 'bg-slate-50 border-slate-100 opacity-80'}
       `}>
+        <div className={`absolute left-5 top-5 z-20 rounded-full bg-white/85 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] shadow-sm ${isUnlocked ? theme.text : "text-slate-400"}`}>
+          Level {game.level}
+        </div>
 
         {/* Top Mascot Peek - Storytelling style */}
         <div className="absolute top-4 right-4 w-16 h-16 opacity-40">
@@ -138,7 +142,7 @@ export function JourneyCard({ childId, game, isFirstUnlocked }: JourneyCardProps
           <div className="w-full pt-2">
             {isUnlocked ? (
               <Link
-                href={`/games/${childId}/${game.game_slug}?level=${game.level}`}
+                href={getGameHref(childId, game.game_slug, game.level)}
                 className={`
                   w-full py-5 rounded-2xl ${theme.button} text-white text-sm font-black uppercase tracking-widest
                   flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-lg shadow-black/5

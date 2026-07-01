@@ -86,27 +86,29 @@ export default function GameResultPage() {
   }
 
   return (
-    <main className="min-h-screen relative flex flex-col py-12 px-4 sm:px-6 bg-slate-50">
+    <main className="relative flex min-h-screen flex-col bg-slate-50 px-4 pb-32 pt-8 sm:px-6 sm:pb-16 sm:pt-12">
       <CalmBackground />
 
-      <div className="max-w-4xl mx-auto w-full space-y-8 relative z-10">
+      <div className="relative z-10 mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-blue-600">
               <Activity size={14} />
               <p className="font-black uppercase tracking-widest text-[10px]">Learning Progress Report</p>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Today's Session Summary</h1>
-            <p className="text-slate-500 font-bold">Activity: <span className="text-slate-800">{session.games?.game_name}</span> (Level {session.level})</p>
+            <h1 className="max-w-sm text-3xl font-black leading-tight tracking-tight text-slate-800 sm:max-w-none sm:text-4xl">Today&apos;s Session Summary</h1>
+            <p className="max-w-xs text-sm font-bold leading-relaxed text-slate-500 sm:max-w-none sm:text-base">
+              Activity: <span className="text-slate-800">{session.games?.game_name}</span> (Level {session.level})
+            </p>
           </div>
-          <div className="text-slate-500 text-sm font-bold bg-white/50 px-4 py-2 rounded-full border border-white/80 backdrop-blur-md shadow-sm">
+          <div className="w-full rounded-full border border-white/80 bg-white/50 px-4 py-3 text-center text-sm font-bold text-slate-500 shadow-sm backdrop-blur-md sm:w-fit sm:py-2">
             {new Date(session.played_at).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })}
           </div>
         </div>
 
         {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             icon={<CheckCircle2 className="text-emerald-500" />}
             label="Correct Answers"
@@ -130,9 +132,9 @@ export default function GameResultPage() {
         </div>
 
         {/* Insight Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
-            <section className="bg-white rounded-[2rem] p-8 shadow-premium border border-slate-100 flex flex-col gap-6">
+            <section className="flex flex-col gap-6 rounded-[2rem] border border-slate-100 bg-white p-5 shadow-premium sm:p-8">
               <div className="space-y-4">
                 <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
                   <TrendingUp size={20} className="text-blue-600" />
@@ -141,7 +143,7 @@ export default function GameResultPage() {
                 <div className={`inline-flex px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${performanceColor}`}>
                   {performanceLabel}
                 </div>
-                <p className="text-slate-600 font-medium leading-relaxed text-lg">
+                <p className="text-base font-medium leading-relaxed text-slate-600 sm:text-lg">
                   Your child answered <span className="font-bold text-slate-800">{session.correct_answers} out of {session.attempts}</span> questions correctly with <span className="font-bold text-slate-800">{accuracy}%</span> accuracy.
                 </p>
               </div>
@@ -150,17 +152,17 @@ export default function GameResultPage() {
               <div className="pt-6 border-t border-slate-50">
                 <h4 className="text-[10px] font-black text-slate-400 tracking-widest uppercase mb-4">Improvement Trend</h4>
                 {prevSession ? (
-                  <div className="flex items-center gap-8">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
                     <div className="space-y-1">
                       <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Previous Session</p>
                       <p className="text-xl font-black text-slate-600">{prevAccuracy}% Accuracy</p>
                     </div>
-                    <div className="w-px h-10 bg-slate-100" />
+                    <div className="hidden h-10 w-px bg-slate-100 sm:block" />
                     <div className="space-y-1">
                       <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Current Session</p>
                       <p className="text-xl font-black text-slate-800">{accuracy}% Accuracy</p>
                     </div>
-                    <div className="flex items-center gap-2 ml-auto">
+                    <div className="flex items-center gap-2 sm:ml-auto">
                       {accuracyDiff !== null && accuracyDiff > 0 ? (
                         <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full text-sm font-black">
                           <ArrowUpRight size={16} />
@@ -185,7 +187,7 @@ export default function GameResultPage() {
 
           {/* Right Column: Next Steps */}
           <div className="space-y-6">
-            <section className="bg-slate-900 rounded-[2.5rem] p-8 shadow-xl text-white flex flex-col gap-6">
+            <section className="flex flex-col gap-6 rounded-[2rem] bg-slate-900 p-6 text-white shadow-xl sm:rounded-[2.5rem] sm:p-8">
               <div className="space-y-2">
                 <h3 className="text-lg font-black text-slate-200">Suggested Next Step</h3>
                 <p className="text-slate-400 font-medium leading-relaxed text-sm">
@@ -225,14 +227,14 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode, label: string
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-3"
+      className="flex flex-col gap-3 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm sm:p-6"
     >
-      <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100">
+      <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50">
         {icon}
       </div>
       <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-        <p className="text-xl font-black text-slate-800 leading-none">{value}</p>
+        <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</p>
+        <p className="break-words text-lg font-black leading-tight text-slate-800 sm:text-xl">{value}</p>
       </div>
     </motion.div>
   );

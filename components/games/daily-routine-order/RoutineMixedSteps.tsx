@@ -17,15 +17,16 @@ export function RoutineMixedSteps({ steps, selectedIds, onSelect, disabled }: Ro
         <span className="w-2 h-2 rounded-full bg-slate-300" />
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Available Steps</h3>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:flex md:flex-wrap md:justify-center">
         {steps.map((step) => (
-          <RoutineStepCard
-            key={step.id}
-            step={step}
-            onClick={() => onSelect(step)}
-            isSelected={selectedIds.includes(step.id)}
-            disabled={disabled}
-          />
+          <div key={step.id} className="md:w-36 lg:w-40">
+            <RoutineStepCard
+              step={step}
+              onClick={() => onSelect(step)}
+              isSelected={selectedIds.includes(step.id)}
+              disabled={disabled}
+            />
+          </div>
         ))}
       </div>
     </div>

@@ -11,8 +11,10 @@ interface ChoiceCardGridProps {
 
 export function ChoiceCardGrid({ options, onSelect, disabled }: ChoiceCardGridProps) {
   return (
-    <div className={`grid gap-4 sm:gap-6 w-full max-w-4xl mx-auto px-6 ${
-      options.length <= 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+    <div className={`grid gap-4 sm:gap-6 lg:gap-7 w-full mx-auto px-6 ${
+      options.length <= 2
+        ? "max-w-2xl grid-cols-1 sm:grid-cols-2"
+        : "max-w-3xl grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap lg:justify-center"
     }`}>
       {options.map((option, index) => (
         <motion.button
@@ -24,7 +26,7 @@ export function ChoiceCardGrid({ options, onSelect, disabled }: ChoiceCardGridPr
           whileTap={!disabled ? { scale: 0.98 } : {}}
           disabled={disabled}
           onClick={() => onSelect(option)}
-          className="group relative flex flex-col items-center justify-center gap-4 p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all disabled:opacity-50"
+          className="group relative flex flex-col items-center justify-center gap-4 rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-sm transition-all hover:border-blue-100 hover:shadow-xl disabled:opacity-50 lg:min-h-[180px] lg:w-[220px]"
         >
           <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-3xl group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-500">
             {option.emoji}

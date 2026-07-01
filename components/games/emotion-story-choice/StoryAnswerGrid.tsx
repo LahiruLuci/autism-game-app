@@ -1,46 +1,86 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { EmotionId } from "@/types/games/emotion-face-match";
+import Image from "next/image";
+import type { EmotionId } from "@/types/games/emotion-face-match";
 import { EMOTIONS } from "@/lib/games/emotion-face-match/emotions";
 
 type StoryAnswerGridProps = {
   options: EmotionId[];
   onAnswer: (emotionId: EmotionId) => void;
   disabled: boolean;
+  selectedEmotion: EmotionId | null;
+  correctEmotion: EmotionId;
+  feedbackType: "correct" | "incorrect" | null;
 };
 
-export function StoryAnswerGrid({ options, onAnswer, disabled }: StoryAnswerGridProps) {
+const MOOD_IMAGES: Partial<Record<EmotionId, string>> = {
+  happy: "/images/mood/happy.png",
+  sad: "/images/mood/sad.png",
+  angry: "/images/mood/angry.png",
+  surprised: "/images/mood/surprise.png",
+  scared: "/images/mood/scared.png",
+};
+
+export function StoryAnswerGrid({
+  options,
+  onAnswer,
+  disabled,
+  selectedEmotion,
+  correctEmotion,
+  feedbackType,
+}: StoryAnswerGridProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap lg:justify-center gap-6 w-full mx-auto">
-      {options.map((emotionId, index) => {
+    <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2">
+      {options.map((emotionId) => {
         const emotion = EMOTIONS[emotionId];
+        const moodImage = MOOD_IMAGES[emotionId];
+        const isSelected = selectedEmotion === emotionId;
+        const isCorrectSelection = isSelected && feedbackType === "correct";
+        const isIncorrectSelection = isSelected && feedbackType === "incorrect";
+        const showCorrectAnswer =
+          feedbackType === "incorrect" && emotionId === correctEmotion;
+
         return (
           <motion.button
             key={emotionId}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 + index * 0.05 }}
-            whileHover={!disabled ? { scale: 1.02 } : {}}
-            whileTap={!disabled ? { scale: 0.98 } : {}}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            whileHover={!disabled ? { scale: 1.01 } : undefined}
+            whileTap={!disabled ? { scale: 0.98 } : undefined}
             disabled={disabled}
             onClick={() => onAnswer(emotionId)}
+            aria-label={emotion.label}
             className={`
-              group relative flex flex-col items-center justify-center gap-8 
-              p-6 sm:p-12 lg:p-14 rounded-[2rem] sm:rounded-[4rem] border-8 border-white shadow-xl 
-              transition-all duration-500 disabled:opacity-50 
-              ${emotion.color} overflow-hidden
+              flex min-h-[112px] items-center gap-4 rounded-[1.75rem] border-2 bg-white/95
+              px-4 py-3 text-left shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-all duration-300
+              focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200
+              disabled:cursor-default md:min-h-[120px] md:px-5
+              ${emotion.color}
+              ${isCorrectSelection || showCorrectAnswer ? "border-emerald-400 bg-emerald-50 ring-2 ring-emerald-100" : ""}
+              ${isIncorrectSelection ? "border-amber-400 bg-amber-50 ring-2 ring-amber-100" : ""}
+              ${disabled && !isSelected && !showCorrectAnswer ? "opacity-60" : "border-white/80 hover:border-orange-200 hover:bg-orange-50/60"}
             `}
           >
-            <span className="text-7xl sm:text-8xl transition-all duration-700 group-hover:scale-110">
-              {emotion.emoji}
-            </span>
-            <span className="font-black text-lg sm:text-xl uppercase tracking-[0.2em] text-slate-800/80">
+            <div className="relative size-[68px] shrink-0 overflow-hidden rounded-[1.25rem] bg-white shadow-sm sm:size-[72px] md:size-20">
+              {moodImage ? (
+                <Image
+                  src={moodImage}
+                  alt={`${emotion.label} feeling`}
+                  fill
+                  sizes="96px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="flex h-full items-center justify-center text-4xl">
+                  {emotion.emoji}
+                </span>
+              )}
+            </div>
+            <span className="text-lg font-black text-slate-900 md:text-xl">
               {emotion.label}
             </span>
-
-            {/* Visual selection hint */}
-            <div className="absolute inset-0 border-8 border-transparent group-hover:border-white/40 rounded-[4rem] transition-colors" />
           </motion.button>
         );
       })}

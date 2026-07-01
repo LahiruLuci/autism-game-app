@@ -5,7 +5,12 @@ import { useEffect, useState, useRef } from "react";
 import { getChildForCurrentParent } from "@/lib/children";
 import { getGameBySlugAndLevel } from "@/lib/games";
 import { saveGameScore } from "@/lib/game-scores";
+
+import { playGameSound } from "@/lib/game-sounds";
+
 import { LoadingState } from "@/components/ui/LoadingState";
+
+import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
 import { CalmBackground } from "@/components/ui/CalmBackground";
 import { Button } from "@/components/ui/Button";
 import { Undo2, CheckCircle2 } from "lucide-react";
@@ -16,7 +21,7 @@ import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
 import { RoutineMixedSteps } from "@/components/games/daily-routine-order/RoutineMixedSteps";
 import { RoutineSelectedOrder } from "@/components/games/daily-routine-order/RoutineSelectedOrder";
 import { RoutineProgress } from "@/components/games/daily-routine-order/RoutineProgress";
-import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
+import { LumiMascot } from "@/components/games/redesign/LumiMascot";
 
 // Logic & Helpers
 import { getLevelConfig } from "@/lib/games/daily-routine-order/levels";
@@ -40,7 +45,9 @@ export default function DailyRoutineOrderPage() {
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [gameData, setGameData] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
   const [gameState, setGameState] = useState<"start" | "playing" | "completed">("start");
+  const [resultHref, setResultHref] = useState<string | null>(null);
 
   // Game Progress State
   const [routines, setRoutines] = useState<RoutineQuestion[]>([]);
@@ -62,6 +69,17 @@ export default function DailyRoutineOrderPage() {
     message: "",
     type: null,
   });
+
+  const totalRounds = routines.length || levelConfig.totalRounds;
+  const currentRoutine = routines[currentRound];
+  const floatingMascotState =
+    feedback.type === "correct"
+      ? "correct"
+      : feedback.type === "incorrect"
+        ? "incorrect"
+        : "normal";
+  const floatingMascotMessage = feedback.message || "Choose the order.";
+
 
   // Load Data
   useEffect(() => {
@@ -91,13 +109,20 @@ export default function DailyRoutineOrderPage() {
     startTimeRef.current = Date.now();
 
     const levelRoutines = getRoutinesForLevel(level, levelConfig.totalRounds);
+    if (levelRoutines.length === 0) {
+      console.error(`[RoutineOrder] No routines found for level ${level}.`);
+      setIsLoading(false);
+      return;
+    }
+
     setRoutines(levelRoutines);
     setGameState("playing");
     initRound(levelRoutines[0]);
     setCurrentScore(0);
   };
 
-  const initRound = (routine: RoutineQuestion) => {
+  const initRound = (routine?: RoutineQuestion) => {
+    if (!routine) return;
     setMixedSteps(shuffleSteps(routine.steps));
     setSelectedSteps([]);
     setIsAnswered(false);
@@ -116,12 +141,12 @@ export default function DailyRoutineOrderPage() {
 
   // Check Order
   const handleCheckOrder = () => {
-    if (isAnswered || selectedSteps.length !== routines[currentRound].steps.length) return;
+    if (!currentRoutine || isAnswered || selectedSteps.length !== currentRoutine.steps.length) return;
 
     setIsAnswered(true);
     attemptsRef.current += 1;
 
-    const isCorrect = isOrderCorrect(selectedSteps, routines[currentRound].steps);
+    const isCorrect = isOrderCorrect(selectedSteps, currentRoutine.steps);
 
     if (isCorrect) {
       correctCountRef.current += 1;
@@ -138,7 +163,7 @@ export default function DailyRoutineOrderPage() {
 
       // Next round after delay
       setTimeout(() => {
-        if (currentRound + 1 < levelConfig.totalRounds) {
+        if (currentRound + 1 < totalRounds) {
           const nextRound = currentRound + 1;
           setCurrentRound(nextRound);
           initRound(routines[nextRound]);
@@ -164,6 +189,7 @@ export default function DailyRoutineOrderPage() {
   const feedbackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showFeedback = (message: string, type: "correct" | "incorrect") => {
+    playGameSound(type === "correct" ? "correct" : "wrong");
     if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     setFeedback({ message, type });
     feedbackTimeoutRef.current = setTimeout(() => {
@@ -188,7 +214,7 @@ export default function DailyRoutineOrderPage() {
 
     try {
       const finalScore = calculateRoutineScore({
-        correctAnswers: levelConfig.totalRounds,
+        correctAnswers: totalRounds,
         wrongAnswers: wrongCountRef.current,
         timeTaken,
         timePenaltyDivisor: levelConfig.timePenaltyDivisor,
@@ -206,7 +232,8 @@ export default function DailyRoutineOrderPage() {
         final_score: finalScore,
       });
 
-      router.push(`/game-result/${sessionId}`);
+      playGameSound("levelWin");
+      setResultHref(`/game-result/${sessionId}`);
     } catch (error) {
       console.error("[RoutineOrder] Failed to save score:", error);
       setIsSaving(false);
@@ -216,8 +243,16 @@ export default function DailyRoutineOrderPage() {
 
   if (isLoading) return <LoadingState message="Preparing your daily routines..." />;
 
+  if (resultHref) {
+    return (
+      <CalmCompletionScreen
+        onShowResults={() => router.push(resultHref)}
+      />
+    );
+  }
+
   return (
-    <main className="min-h-screen relative overflow-hidden bg-slate-50 pb-20">
+    <main className="daily-routine-page min-h-screen relative overflow-hidden bg-slate-50 pb-20">
       <CalmBackground />
 
       <RoutineGameHeader
@@ -245,20 +280,29 @@ export default function DailyRoutineOrderPage() {
           />
         )}
 
-        {gameState === "playing" && routines.length > 0 && (
+        {gameState === "playing" && currentRoutine && (
           <div className="space-y-12 py-6">
-            <MascotFeedbackBar feedbackType={feedback.type} />
+            <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:bottom-7 sm:right-7 lg:bottom-10 lg:right-10">
+              <div className="mb-8 max-w-[190px] rounded-[1.5rem] border border-amber-100 bg-white px-4 py-3 text-center shadow-lg sm:mb-10 sm:max-w-[230px] sm:px-5 sm:py-4 lg:mb-12 lg:max-w-[250px]">
+                <p className="text-sm font-black leading-snug text-slate-800 sm:text-base">{floatingMascotMessage}</p>
+              </div>
+              <LumiMascot
+                state={floatingMascotState}
+                size="float"
+                className="items-end"
+              />
+            </div>
 
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-black text-slate-900 tracking-tight">
-                {routines[currentRound].title}
+                {currentRoutine.title}
               </h2>
               <p className="text-slate-500 font-medium">Tap the steps in the correct order.</p>
             </div>
 
             <RoutineSelectedOrder
               selectedSteps={selectedSteps}
-              totalSteps={routines[currentRound].steps.length}
+              totalSteps={currentRoutine.steps.length}
             />
 
             <RoutineMixedSteps
@@ -279,7 +323,7 @@ export default function DailyRoutineOrderPage() {
               </button>
 
               <button
-                disabled={isAnswered || selectedSteps.length !== routines[currentRound].steps.length}
+                disabled={isAnswered || selectedSteps.length !== currentRoutine.steps.length}
                 onClick={handleCheckOrder}
                 className="w-full sm:w-auto rounded-full px-10 py-6 h-auto font-black uppercase tracking-widest text-xs bg-slate-900 text-white shadow-xl shadow-slate-200 hover:bg-slate-800 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
               >
@@ -290,7 +334,7 @@ export default function DailyRoutineOrderPage() {
 
             <RoutineProgress
               current={currentRound + 1}
-              total={levelConfig.totalRounds}
+              total={totalRounds}
             />
           </div>
         )}

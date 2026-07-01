@@ -5,7 +5,12 @@ import { useEffect, useState, useRef } from "react";
 import { getChildForCurrentParent } from "@/lib/children";
 import { getGameBySlugAndLevel } from "@/lib/games";
 import { saveGameScore } from "@/lib/game-scores";
+
+import { playGameSound } from "@/lib/game-sounds";
+
 import { LoadingState } from "@/components/ui/LoadingState";
+
+import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
 import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Components
@@ -15,6 +20,7 @@ import { ScenarioCard } from "@/components/games/personal-choice-adventure/Scena
 import { ChoiceCardGrid } from "@/components/games/personal-choice-adventure/ChoiceCardGrid";
 import { ChoiceProgress } from "@/components/games/personal-choice-adventure/ChoiceProgress";
 import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
+import { LumiMascot } from "@/components/games/redesign/LumiMascot";
 
 // Logic
 import { getChoiceLevelConfig } from "@/lib/games/personal-choice-adventure/levels";
@@ -38,7 +44,9 @@ export default function PersonalChoiceAdventurePage() {
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [gameData, setGameData] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
   const [gameState, setGameState] = useState<"start" | "playing" | "saving" | "completed">("start");
+  const [resultHref, setResultHref] = useState<string | null>(null);
 
   // Gameplay State
   const [scenarios, setScenarios] = useState<ChoiceScenario[]>([]);
@@ -59,6 +67,15 @@ export default function PersonalChoiceAdventurePage() {
   const [displayScore, setDisplayScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
+
+  const mobileMascotState =
+    feedback.type === "correct"
+      ? "correct"
+      : feedback.type === "incorrect"
+        ? "incorrect"
+        : "normal";
+  const mobileMascotMessage =
+    feedback.message || "Choose a helpful choice.";
 
   // Load Data
   useEffect(() => {
@@ -109,6 +126,7 @@ export default function PersonalChoiceAdventurePage() {
     attemptsRef.current += 1;
 
     if (option.isCorrect) {
+      playGameSound("correct");
       correctCountRef.current += 1;
       setFeedback({
         message: getRandomChoiceFeedback("correct"),
@@ -135,6 +153,7 @@ export default function PersonalChoiceAdventurePage() {
         }
       }, 2500);
     } else {
+      playGameSound("wrong");
       wrongCountRef.current += 1;
       const helpfulChoice = scenarios[currentRound].options.find(o => o.isCorrect);
 
@@ -187,7 +206,8 @@ export default function PersonalChoiceAdventurePage() {
         final_score: finalScore,
       });
 
-      router.push(`/game-result/${sessionId}`);
+      playGameSound("levelWin");
+      setResultHref(`/game-result/${sessionId}`);
     } catch (error) {
       console.error("[ChoiceAdventure] Failed to save score:", error);
       setIsSaving(false);
@@ -197,6 +217,14 @@ export default function PersonalChoiceAdventurePage() {
   };
 
   if (isLoading) return <LoadingState message="Preparing your adventure..." />;
+
+  if (resultHref) {
+    return (
+      <CalmCompletionScreen
+        onShowResults={() => router.push(resultHref)}
+      />
+    );
+  }
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
@@ -229,7 +257,9 @@ export default function PersonalChoiceAdventurePage() {
 
         {gameState === "playing" && scenarios.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
-            <MascotFeedbackBar feedbackType={feedback.type} />
+            <div className="hidden sm:block">
+              <MascotFeedbackBar feedbackType={feedback.type} />
+            </div>
 
             <ScenarioCard
               emoji={scenarios[currentRound].emoji}
@@ -247,6 +277,17 @@ export default function PersonalChoiceAdventurePage() {
               <ChoiceProgress
                 current={currentRound + 1}
                 total={levelConfig.rounds}
+              />
+            </div>
+
+            <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:hidden">
+              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-rose-100 bg-white px-4 py-3 text-center shadow-lg">
+                <p className="text-sm font-black leading-snug text-slate-800">{mobileMascotMessage}</p>
+              </div>
+              <LumiMascot
+                state={mobileMascotState}
+                size="sm"
+                className="items-end"
               />
             </div>
           </div>

@@ -11,26 +11,37 @@ interface MemoryGameHeaderProps {
 }
 
 export function MemoryGameHeader({ childId, childName, score, level }: MemoryGameHeaderProps) {
-  return (
-    <div className="w-full max-w-5xl mx-auto px-6 py-6 flex items-center justify-between relative z-20">
-      <Link
-        href={`/games/${childId}`}
-        className="flex items-center gap-2 text-slate-600 font-bold hover:text-rose-500 transition-colors bg-white/50 px-4 py-2 rounded-full border border-slate-100"
-      >
-        <ChevronLeft size={20} className="stroke-[3px]" />
-        <span className="text-sm">Exit Journey</span>
-      </Link>
+  const helperText = "Tap a card and find the matching card.";
 
-      <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
-        <h1 className="text-2xl font-black text-slate-800 tracking-tight">Memory Match</h1>
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
-          Level {level}
-        </span>
+  return (
+    <div className="relative z-20 mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 sm:py-6">
+      <div className="flex items-start justify-between gap-3 sm:items-center">
+        <Link
+          href={`/games/${childId}`}
+          className="flex items-center gap-2 rounded-full border border-slate-100 bg-white/50 px-3 py-2 font-bold text-slate-600 transition-colors hover:text-rose-500 sm:px-4"
+        >
+          <ChevronLeft size={20} className="stroke-[3px]" />
+          <span className="text-sm max-[420px]:hidden">Exit Journey</span>
+        </Link>
+
+        <div className="flex min-w-[80px] flex-col items-end rounded-2xl border border-slate-100 bg-white/50 px-4 py-2 sm:px-5">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Score</span>
+          <span className="text-2xl font-black leading-none text-blue-700">{score}</span>
+        </div>
       </div>
 
-      <div className="flex flex-col items-end bg-white/50 px-5 py-2 rounded-2xl border border-slate-100 min-w-[80px]">
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Score</span>
-        <span className="text-2xl font-black text-blue-700 leading-none">{score}</span>
+      <div className="mt-3 flex flex-col items-center text-center sm:absolute sm:left-1/2 sm:top-1/2 sm:mt-0 sm:-translate-x-1/2 sm:-translate-y-1/2">
+        <h1 className="text-2xl font-black tracking-tight text-slate-800">
+          Memory Match
+        </h1>
+        <span className="rounded-full border border-blue-100 bg-blue-50/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
+          Level {level}
+        </span>
+        {helperText && (
+          <p className="mt-2 max-w-[260px] text-xs font-bold leading-relaxed text-slate-500 sm:max-w-[320px]">
+            {helperText}
+          </p>
+        )}
       </div>
     </div>
   );

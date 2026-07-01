@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { GameWithUnlockState } from "@/types/game";
+import { getGameHref } from "@/lib/game-routes";
 
 type EmotionJourneySectionProps = {
   childId: string;
@@ -116,7 +117,7 @@ export function EmotionJourneySection({ childId, games }: EmotionJourneySectionP
                     <div className="pt-2">
                       {isUnlocked ? (
                         <Link
-                          href={`/games/${childId}/${game.game_slug}?level=${game.level}`}
+                          href={getGameHref(childId, game.game_slug, game.level)}
                           className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-extrabold shadow-lg shadow-blue-200 hover:shadow-xl hover:scale-105 transition-all duration-300"
                         >
                           Start Activity

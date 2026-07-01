@@ -27,11 +27,13 @@ export function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage("");
+    setSuccessMessage("");
 
     const trimmedName = fullName.trim();
     const trimmedEmail = email.trim();
@@ -54,11 +56,20 @@ export function RegisterForm() {
     setIsSubmitting(true);
 
     try {
-      await registerParent({
+      const result = await registerParent({
         fullName: trimmedName,
         email: trimmedEmail,
         password,
       });
+
+      if (result.requiresEmailConfirmation) {
+        const message =
+          "Account created. Please check your email and confirm your address before logging in.";
+        setSuccessMessage(message);
+        toast.success(message);
+        return;
+      }
+
       toast.success("Account created successfully.");
       router.push("/children");
       router.refresh();
@@ -90,6 +101,18 @@ export function RegisterForm() {
     <>
       <Toaster position="top-center" />
       <form className="space-y-5" onSubmit={handleSubmit}>
+        {successMessage ? (
+          <div
+            className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800"
+            role="status"
+          >
+            {successMessage}{" "}
+            <Link className="underline" href="/login">
+              Go to login
+            </Link>
+          </div>
+        ) : null}
+
         {errorMessage ? (
           <div
             className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700"

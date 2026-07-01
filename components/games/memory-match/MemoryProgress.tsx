@@ -9,7 +9,7 @@ export function MemoryProgress({ matchedPairs, totalPairs }: MemoryProgressProps
   const percentage = Math.round((matchedPairs / totalPairs) * 100);
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-8 space-y-4">
+    <div className="mx-auto w-full max-w-2xl px-3 py-6 space-y-4 lg:px-4 lg:py-8">
       <div className="flex justify-between items-end">
         <div className="space-y-1">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Journey Progress</span>
@@ -29,3 +29,4 @@ export function MemoryProgress({ matchedPairs, totalPairs }: MemoryProgressProps
     </div>
   );
 }
+

@@ -18,7 +18,7 @@ export default function AuthNavbar({ userEmail }: { userEmail: string }) {
     <div className="flex items-center justify-between h-16 sm:h-20 w-full layout-container">
       {/* Left side */}
       <div className="flex items-center gap-10">
-        <Logo href="/children" />
+        <Logo href="/" />
 
         {/* Desktop Links */}
         <nav className="hidden md:flex items-center gap-8">

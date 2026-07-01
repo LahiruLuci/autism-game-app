@@ -7,7 +7,7 @@ type LumiMascotProps = {
     mode?: "idle" | "happy" | "talking" | "cheering" | "supportive";
     state?: "normal" | "correct" | "incorrect";
     message?: string;
-    size?: "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "float";
     className?: string;
 };
 
@@ -17,6 +17,7 @@ export function LumiMascot({ mode, state = "normal", message, size = "md", class
         md: "w-40 h-40",
         lg: "w-56 h-56",
         xl: "w-72 h-72",
+        float: "w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36",
     };
 
     const currentImage = state === "correct"

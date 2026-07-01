@@ -1,0 +1,110 @@
+
+> game-app@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.56.1:3000
+- Environments: .env.local
+✓ Ready in 1097ms
+
+○ Compiling /children ...
+ GET /children 200 in 15.3s (next.js: 14.8s, application-code: 514ms)
+ GET /children 200 in 343ms (next.js: 86ms, application-code: 257ms)
+○ Compiling /games/[childId] ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 8.0s (next.js: 7.8s, application-code: 165ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 613ms (next.js: 549ms, application-code: 64ms)
+○ Compiling /games/[childId]/emotion-face-match ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 13.0s (next.js: 12.4s, application-code: 583ms)
+○ Compiling /game-result/[sessionId] ...
+ GET /game-result/45 200 in 6.8s (next.js: 6.8s, application-code: 64ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1232ms (next.js: 931ms, application-code: 301ms)
+ GET /game-result/45 200 in 10.0s (next.js: 2.6s, application-code: 7.4s)
+ GET /children 200 in 174ms (next.js: 64ms, application-code: 110ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 820ms (next.js: 731ms, application-code: 89ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 2.7s (next.js: 1614ms, application-code: 1121ms)
+ GET /game-result/46 200 in 750ms (next.js: 681ms, application-code: 68ms)
+ GET /game-result/46 200 in 666ms (next.js: 567ms, application-code: 99ms)
+ GET /game-result/46 200 in 3.5s (next.js: 2.4s, application-code: 1112ms)
+ GET /children 200 in 116ms (next.js: 51ms, application-code: 65ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 827ms (next.js: 766ms, application-code: 61ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 801ms (next.js: 721ms, application-code: 80ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 665ms (next.js: 506ms, application-code: 159ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 8.7s (next.js: 5.8s, application-code: 2.9s)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.7s (next.js: 46ms, application-code: 2.7s)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.7s (next.js: 75ms, application-code: 2.6s)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.2s (next.js: 34ms, application-code: 2.2s)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1670ms (next.js: 71ms, application-code: 1599ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1524ms (next.js: 128ms, application-code: 1396ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 808ms (next.js: 40ms, application-code: 769ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 2.5s (next.js: 2.0s, application-code: 437ms)
+ GET /game-result/47 200 in 925ms (next.js: 820ms, application-code: 105ms)
+○ Compiling /children/[childId] ...
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 38.1s (next.js: 37.9s, application-code: 235ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 970ms (next.js: 821ms, application-code: 149ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1414ms (next.js: 1301ms, application-code: 113ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 7.1s (next.js: 3.6s, application-code: 3.5s)
+ GET /children 200 in 412ms (next.js: 258ms, application-code: 154ms)
+ GET /children 200 in 164ms (next.js: 24ms, application-code: 140ms)
+ GET /children 200 in 158ms (next.js: 29ms, application-code: 129ms)
+ GET /children 200 in 1368ms (next.js: 852ms, application-code: 516ms)
+○ Compiling / ...
+ GET / 200 in 8.5s (next.js: 8.4s, application-code: 167ms)
+ GET / 200 in 132ms (next.js: 11ms, application-code: 121ms)
+ GET /children 200 in 423ms (next.js: 187ms, application-code: 236ms)
+ GET /games/2f48b004-6f06-4f6d-9c92-3f5473d6c6c4 200 in 883ms (next.js: 803ms, application-code: 80ms)
+  Reload env: .env.local
+ GET /games/2f48b004-6f06-4f6d-9c92-3f5473d6c6c4 200 in 3.6s (next.js: 2.8s, application-code: 790ms)
+ GET /games/2f48b004-6f06-4f6d-9c92-3f5473d6c6c4 200 in 4.9s (next.js: 1288ms, application-code: 3.6s)
+ GET /children/2f48b004-6f06-4f6d-9c92-3f5473d6c6c4 200 in 1673ms (next.js: 1386ms, application-code: 287ms)
+ GET /children 200 in 89ms (next.js: 45ms, application-code: 44ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 587ms (next.js: 520ms, application-code: 67ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.2s (next.js: 1629ms, application-code: 602ms)
+ GET / 200 in 2.9s (next.js: 922ms, application-code: 2.0s)
+ GET / 200 in 1767ms (next.js: 171ms, application-code: 1596ms)
+ GET / 200 in 4.9s (next.js: 250ms, application-code: 4.6s)
+○ Compiling /how-it-works ...
+ GET /how-it-works 200 in 94s (next.js: 91s, application-code: 3.3s)
+ GET / 200 in 39.8s (next.js: 6.6s, application-code: 33.2s)
+ GET /how-it-works 200 in 4.1s (next.js: 895ms, application-code: 3.2s)
+○ Compiling /development-areas ...
+ GET /development-areas 200 in 47s (next.js: 46s, application-code: 906ms)
+ GET /development-areas 200 in 496ms (next.js: 61ms, application-code: 435ms)
+○ Compiling /register ...
+ GET /register 200 in 18.2s (next.js: 17.5s, application-code: 728ms)
+ GET /register 200 in 733ms (next.js: 31ms, application-code: 703ms)
+○ Compiling /login ...
+ GET /login 200 in 15.4s (next.js: 14.5s, application-code: 891ms)
+ GET /login 200 in 727ms (next.js: 29ms, application-code: 698ms)
+ GET /children 200 in 406ms (next.js: 138ms, application-code: 268ms)
+ GET /children 200 in 214ms (next.js: 33ms, application-code: 181ms)
+○ Compiling /children/[childId] ...
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 18.8s (next.js: 18.1s, application-code: 672ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 4.0s (next.js: 1139ms, application-code: 2.9s)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1492ms (next.js: 1144ms, application-code: 348ms)
+ GET /children 200 in 529ms (next.js: 195ms, application-code: 335ms)
+○ Compiling /children/[childId]/dashboard ...
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30/dashboard 200 in 24.9s (next.js: 24.8s, application-code: 191ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30/dashboard 200 in 957ms (next.js: 815ms, application-code: 141ms)
+ GET /children 200 in 180ms (next.js: 58ms, application-code: 122ms)
+○ Compiling /games/[childId] ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 15.1s (next.js: 14.8s, application-code: 235ms)
+○ Compiling /games/[childId]/emotion-story-choice ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-story-choice?level=1 200 in 36.5s (next.js: 35.9s, application-code: 525ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-story-choice?level=1 200 in 2.0s (next.js: 1574ms, application-code: 433ms)
+○ Compiling /game-result/[sessionId] ...
+ GET /game-result/48 200 in 13.1s (next.js: 12.7s, application-code: 430ms)
+ GET /game-result/48 200 in 2.5s (next.js: 1655ms, application-code: 878ms)
+ GET /game-result/48 200 in 471ms (next.js: 40ms, application-code: 431ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.1s (next.js: 1665ms, application-code: 429ms)
+ GET /children/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.7s (next.js: 2.1s, application-code: 558ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.8s (next.js: 1619ms, application-code: 1228ms)
+○ Compiling /games/[childId]/count-the-objects ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/count-the-objects?level=1 200 in 45s (next.js: 44s, application-code: 766ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/count-the-objects?level=1 200 in 2.3s (next.js: 1803ms, application-code: 538ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 1799ms (next.js: 1515ms, application-code: 284ms)
+○ Compiling /games/[childId]/emotion-face-match ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 33.8s (next.js: 32.4s, application-code: 1391ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-face-match?level=1 200 in 884ms (next.js: 75ms, application-code: 809ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/count-the-objects?level=1 200 in 6.4s (next.js: 3.7s, application-code: 2.7s)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 2.0s (next.js: 1594ms, application-code: 418ms)

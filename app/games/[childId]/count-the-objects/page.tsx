@@ -5,7 +5,12 @@ import { useEffect, useState, useRef } from "react";
 import { getChildForCurrentParent } from "@/lib/children";
 import { getGameBySlugAndLevel } from "@/lib/games";
 import { saveGameScore } from "@/lib/game-scores";
+
+import { playGameSound } from "@/lib/game-sounds";
+
 import { LoadingState } from "@/components/ui/LoadingState";
+
+import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
 import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Components
@@ -14,6 +19,7 @@ import { CountingDisplayArea } from "@/components/games/count-the-objects/Counti
 import { NumberChoiceGrid } from "@/components/games/count-the-objects/NumberChoiceGrid";
 import { CountingProgress } from "@/components/games/count-the-objects/CountingProgress";
 import { MascotFeedbackBar } from "@/components/games/redesign/MascotFeedbackBar";
+import { LumiMascot } from "@/components/games/redesign/LumiMascot";
 
 // Logic
 import { getCountingLevelConfig } from "@/lib/games/count-the-objects/levels";
@@ -37,7 +43,9 @@ export default function CountTheObjectsPage() {
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [gameData, setGameData] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
   const [gameState, setGameState] = useState<"start" | "playing" | "saving" | "completed">("start");
+  const [resultHref, setResultHref] = useState<string | null>(null);
 
   // Gameplay State
   const [questions, setQuestions] = useState<CountingQuestion[]>([]);
@@ -57,6 +65,14 @@ export default function CountTheObjectsPage() {
   const [displayScore, setDisplayScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
+
+  const mobileMascotState =
+    feedback.type === "correct"
+      ? "correct"
+      : feedback.type === "incorrect"
+        ? "incorrect"
+        : "normal";
+  const mobileMascotMessage = feedback.message || "Choose the number.";
 
   // Load Data
   useEffect(() => {
@@ -100,6 +116,7 @@ export default function CountTheObjectsPage() {
     const isCorrect = value === currentQuestion.count;
 
     if (isCorrect) {
+      playGameSound("correct");
       correctCountRef.current += 1;
       setFeedback({
         message: getRandomCountingFeedback("correct"),
@@ -127,6 +144,7 @@ export default function CountTheObjectsPage() {
         }
       }, 2000);
     } else {
+      playGameSound("wrong");
       wrongCountRef.current += 1;
       setFeedback({
         message: getRandomCountingFeedback("incorrect"),
@@ -176,7 +194,8 @@ export default function CountTheObjectsPage() {
         final_score: finalScore,
       });
 
-      router.push(`/game-result/${sessionId}`);
+      playGameSound("levelWin");
+      setResultHref(`/game-result/${sessionId}`);
     } catch (error) {
       console.error("[CountObjects] Failed to save score:", error);
       setIsSaving(false);
@@ -186,6 +205,14 @@ export default function CountTheObjectsPage() {
   };
 
   if (isLoading) return <LoadingState message="Setting up your counting activity..." />;
+
+  if (resultHref) {
+    return (
+      <CalmCompletionScreen
+        onShowResults={() => router.push(resultHref)}
+      />
+    );
+  }
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
@@ -203,7 +230,9 @@ export default function CountTheObjectsPage() {
       <div className="relative z-10 flex-1 flex flex-col">
         {gameState === "playing" && questions.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
-            <MascotFeedbackBar feedbackType={feedback.type} />
+            <div className="hidden sm:block">
+              <MascotFeedbackBar feedbackType={feedback.type} />
+            </div>
 
             <CountingDisplayArea
               emoji={questions[currentRound].emoji}
@@ -220,6 +249,17 @@ export default function CountTheObjectsPage() {
               <CountingProgress
                 current={currentRound + 1}
                 total={levelConfig.rounds}
+              />
+            </div>
+
+            <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:hidden">
+              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-cyan-100 bg-white px-4 py-3 text-center shadow-lg">
+                <p className="text-sm font-black leading-snug text-slate-800">{mobileMascotMessage}</p>
+              </div>
+              <LumiMascot
+                state={mobileMascotState}
+                size="sm"
+                className="items-end"
               />
             </div>
           </div>

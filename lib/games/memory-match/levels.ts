@@ -19,7 +19,7 @@ export const MEMORY_LEVELS: Record<number, MemoryLevelConfig> = {
   2: {
     level: 2,
     pairsCount: 4,
-    gridCols: 2, // 2x4 or 4x2
+    gridCols: 4, // 4x2
     hasTimer: true,
     timePenaltyDivisor: 60,
     icons: ["⭐", "🌙", "🌸", "🐢"],
@@ -27,7 +27,7 @@ export const MEMORY_LEVELS: Record<number, MemoryLevelConfig> = {
   3: {
     level: 3,
     pairsCount: 6,
-    gridCols: 3, // 3x4 or 4x3
+    gridCols: 4, // 4x3
     hasTimer: true,
     timePenaltyDivisor: 45,
     icons: ["⭐", "🌙", "🌸", "🐢", "🍎", "🦋"],
@@ -37,3 +37,5 @@ export const MEMORY_LEVELS: Record<number, MemoryLevelConfig> = {
 export function getLevelConfig(level: number): MemoryLevelConfig {
   return MEMORY_LEVELS[level] || MEMORY_LEVELS[1];
 }
+
+

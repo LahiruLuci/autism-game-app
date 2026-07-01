@@ -59,14 +59,14 @@ export function GameIntroScreen({
     const style = colorStyles[accentColor as keyof typeof colorStyles] || colorStyles.blue;
 
     return (
-        <main className="h-screen relative flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+        <div className="relative flex w-full items-center justify-center overflow-x-hidden px-4 py-4 sm:min-h-[calc(100svh-8rem)] sm:p-6">
             <CalmBackground />
 
             {/* Background decorative blobs */}
             <div className="absolute top-0 -left-20 w-96 h-96 bg-blue-50/40 rounded-full blur-3xl -z-0" />
             <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-purple-50/40 rounded-full blur-3xl -z-0" />
 
-            <div className="max-w-xl w-full flex flex-col items-center gap-4 sm:gap-6 relative z-10">
+            <div className="relative z-10 flex w-full max-w-xl flex-col items-center gap-3 pt-2 sm:gap-6 sm:pt-0">
                 {/* Large Mascot Illustration - Scaled Down for Viewport */}
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -76,7 +76,7 @@ export function GameIntroScreen({
                         stiffness: 100,
                         damping: 15
                     }}
-                    className="relative w-40 h-40 sm:w-56 sm:h-56"
+                    className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-56 md:w-56"
                 >
                     <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full" />
                     <Image
@@ -93,18 +93,18 @@ export function GameIntroScreen({
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="w-full bg-white/60 backdrop-blur-2xl rounded-[3rem] p-6 sm:p-10 shadow-premium border border-white/80 space-y-6 text-center"
+                    className="w-full space-y-4 rounded-[2.5rem] border border-white/80 bg-white/60 p-5 text-center shadow-premium backdrop-blur-2xl sm:space-y-6 sm:rounded-[3rem] sm:p-10"
                 >
                     <div className="space-y-4">
                         <div className="flex flex-col items-center gap-2 lg:gap-4">
-                            <span className={`px-4 lg:px-5 py-1 rounded-full ${style.bg} ${style.text} text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] border ${style.border}`}>
+                            <span className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.18em] sm:px-4 sm:text-xs lg:px-5 ${style.bg} ${style.text} ${style.border}`}>
                                 Level {level} — {levelLabel}
                             </span>
-                            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight tracking-tight">
+                            <h1 className="text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl">
                                 {title}
                             </h1>
                         </div>
-                        <p className="text-base sm:text-lg text-slate-500 font-bold max-w-md mx-auto leading-relaxed">
+                        <p className="mx-auto max-w-md text-base font-bold leading-relaxed text-slate-500 sm:text-lg">
                             {description}
                         </p>
                     </div>
@@ -113,7 +113,7 @@ export function GameIntroScreen({
                     {chips.length > 0 && (
                         <div className="flex flex-wrap items-center justify-center gap-2">
                             {chips.map((chip, idx) => (
-                                <div key={idx} className="px-4 py-2 rounded-xl bg-white border-2 border-slate-50 text-slate-600 text-[10px] sm:text-xs font-black flex items-center gap-2 shadow-sm">
+                                <div key={idx} className="flex items-center gap-2 rounded-xl border-2 border-slate-50 bg-white px-3 py-2 text-[10px] font-black text-slate-600 shadow-sm sm:px-4 sm:text-xs">
                                     <span>{chip.icon}</span>
                                     {chip.text}
                                 </div>
@@ -122,22 +122,23 @@ export function GameIntroScreen({
                     )}
 
                     {/* Actions - Reduced Padding */}
-                    <div className="flex flex-col gap-3 lg:gap-4 pt-2">
+                    <div className="flex flex-col gap-3 pt-1 lg:gap-4">
                         <button
                             onClick={onStart}
-                            className={`w-full py-4 sm:py-5 rounded-full ${style.button} text-white text-sm sm:text-base font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300`}
+                            className={`w-full rounded-full px-4 py-4 text-center text-base font-black uppercase text-white shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:px-6 sm:py-5 sm:text-base ${style.button} whitespace-normal break-words tracking-[0.08em] sm:tracking-widest`}
                         >
                             {buttonText}
                         </button>
                         <button
                             onClick={onBack}
-                            className="w-full py-3 rounded-full bg-white/50 text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-slate-600 transition-all duration-300"
+                            className="w-full rounded-full bg-white/50 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 transition-all duration-300 hover:bg-white hover:text-slate-600 sm:text-xs sm:tracking-widest"
                         >
                             Back to Games
                         </button>
                     </div>
                 </motion.div>
             </div>
-        </main>
+        </div>
     );
 }
+

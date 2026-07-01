@@ -5,7 +5,12 @@ import { useEffect, useState, useRef } from "react";
 import { getChildForCurrentParent } from "@/lib/children";
 import { getGameBySlugAndLevel } from "@/lib/games";
 import { saveGameScore } from "@/lib/game-scores";
+
+import { playGameSound } from "@/lib/game-sounds";
+
 import { LoadingState } from "@/components/ui/LoadingState";
+
+import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
 import { CalmBackground } from "@/components/ui/CalmBackground";
 
 // Components
@@ -37,7 +42,9 @@ export default function EmotionReflectionBoardPage() {
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [gameData, setGameData] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
   const [gameState, setGameState] = useState<"start" | "playing" | "completed">("start");
+  const [resultHref, setResultHref] = useState<string | null>(null);
 
   // Gameplay State
   const [situations, setSituations] = useState<ReflectionSituation[]>([]);
@@ -105,6 +112,7 @@ export default function EmotionReflectionBoardPage() {
     setFeedback({ message: msg, visible: true });
 
     // Progress
+    playGameSound("correct");
     completedRoundsRef.current += 1;
 
     setTimeout(() => {
@@ -154,7 +162,8 @@ export default function EmotionReflectionBoardPage() {
         final_score: finalScore,
       });
 
-      router.push(`/game-result/${sessionId}`);
+      playGameSound("levelWin");
+      setResultHref(`/game-result/${sessionId}`);
     } catch (error) {
       console.error("[ReflectionBoard] Failed to save score:", error);
       setIsSaving(false);
@@ -163,6 +172,14 @@ export default function EmotionReflectionBoardPage() {
   };
 
   if (isLoading) return <LoadingState message="Preparing your reflection board..." />;
+
+  if (resultHref) {
+    return (
+      <CalmCompletionScreen
+        onShowResults={() => router.push(resultHref)}
+      />
+    );
+  }
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col">

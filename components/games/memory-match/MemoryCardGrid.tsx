@@ -11,12 +11,18 @@ interface MemoryCardGridProps {
 }
 
 export function MemoryCardGrid({ cards, onCardClick, disabled, gridCols }: MemoryCardGridProps) {
+  const widthClass =
+    gridCols === 2
+      ? "max-w-[330px] sm:max-w-[520px] lg:max-w-[700px]"
+      : "max-w-[340px] sm:max-w-[600px] lg:max-w-[820px]";
+  const gridClass =
+    gridCols === 2
+      ? "grid-cols-2"
+      : "grid-cols-3 sm:grid-cols-4";
+
   return (
-    <div 
-      className={`grid gap-4 md:gap-6 w-full max-w-2xl mx-auto p-4`}
-      style={{ 
-        gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` 
-      }}
+    <div
+      className={`grid ${gridClass} w-full ${widthClass} mx-auto gap-2 p-1 sm:gap-3 sm:p-2 lg:gap-4 lg:p-3`}
     >
       {cards.map((card) => (
         <MemoryCard

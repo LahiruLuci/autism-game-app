@@ -4,13 +4,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { loginParent } from "@/lib/auth";
+import { AppAuthError, loginParent } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 const fillAllFieldsMessage = "Please fill all fields.";
 const loginErrorMessage =
   "We could not log you in. Please check your email and password.";
+const emailNotConfirmedMessage =
+  "Please confirm your email address before logging in.";
+const emailProviderDisabledMessage =
+  "Email and password login is not enabled for this project.";
+const parentProfilePermissionMessage =
+  "You are logged in, but your parent profile could not be prepared. Please check the parents table access policy.";
 
 export function LoginForm() {
   const router = useRouter();
@@ -40,9 +46,28 @@ export function LoginForm() {
       toast.success("Login successful.");
       router.push("/children");
       router.refresh();
-    } catch {
-      setErrorMessage(loginErrorMessage);
-      toast.error(loginErrorMessage);
+    } catch (error) {
+      let message = loginErrorMessage;
+
+      if (error instanceof AppAuthError) {
+        if (error.code === "email_not_confirmed") {
+          message = emailNotConfirmedMessage;
+        }
+
+        if (error.code === "email_provider_disabled") {
+          message = emailProviderDisabledMessage;
+        }
+
+        if (
+          error.code === "parent_profile_forbidden" ||
+          error.code === "parent_profile_failed"
+        ) {
+          message = parentProfilePermissionMessage;
+        }
+      }
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

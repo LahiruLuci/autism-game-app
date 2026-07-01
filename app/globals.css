@@ -174,3 +174,17 @@
 .layout-container {
   @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12;
 }
+
+/* Hide nested game-area scrollbars while keeping the page's normal scrollbar. */
+.daily-routine-page,
+.daily-routine-page * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.daily-routine-page::-webkit-scrollbar,
+.daily-routine-page *::-webkit-scrollbar {
+  display: none;
+}
+
+

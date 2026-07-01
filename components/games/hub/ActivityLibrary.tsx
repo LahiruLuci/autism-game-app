@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Play, Lock, Clock, BarChart, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { GameWithUnlockState } from "@/types/game";
+import { getGameHref } from "@/lib/game-routes";
 
 interface ActivityLibraryProps {
     childId: string;
@@ -69,7 +70,7 @@ export function ActivityLibrary({ childId, games }: ActivityLibraryProps) {
                             <div className="flex-shrink-0 w-full md:w-auto">
                                 {game.is_unlocked ? (
                                     <Link
-                                        href={`/games/${childId}/${game.game_slug}`}
+                                        href={getGameHref(childId, game.game_slug, game.level)}
                                         className="flex items-center justify-center gap-3 h-14 px-8 rounded-2xl bg-blue-600 text-white font-black text-sm uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
                                     >
                                         Play

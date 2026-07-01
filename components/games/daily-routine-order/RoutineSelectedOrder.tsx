@@ -20,8 +20,8 @@ export function RoutineSelectedOrder({ selectedSteps, totalSteps }: RoutineSelec
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">My Routine Order</h3>
       </div>
 
-      <div className="bg-white/40 backdrop-blur-xl rounded-[3rem] p-8 border border-white/80 shadow-premium">
-        <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="rounded-[2rem] border border-white/80 bg-white/40 p-4 shadow-premium backdrop-blur-xl sm:rounded-[3rem] sm:p-8">
+        <div className="flex flex-nowrap items-center justify-center gap-2 sm:flex-wrap sm:gap-4">
           <AnimatePresence mode="popLayout">
             {selectedSteps.map((step, idx) => (
               <motion.div
@@ -30,9 +30,9 @@ export function RoutineSelectedOrder({ selectedSteps, totalSteps }: RoutineSelec
                 initial={{ opacity: 0, scale: 0.8, x: -20 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                className="flex items-center gap-4"
+                className="flex min-w-0 items-center gap-2 sm:shrink-0 sm:gap-4"
               >
-                <div className="w-24 md:w-32">
+                <div className="w-16 min-w-0 sm:w-24 md:w-32">
                   <RoutineStepCard step={step} index={idx} />
                 </div>
                 {idx < totalSteps - 1 && (
@@ -45,7 +45,7 @@ export function RoutineSelectedOrder({ selectedSteps, totalSteps }: RoutineSelec
               <motion.div
                 key={`empty-${idx}`}
                 layout
-                className="w-24 md:w-32 aspect-[4/3] rounded-[2rem] border-2 border-dashed border-slate-200 bg-white/30 flex items-center justify-center text-slate-200 text-2xl font-black"
+                className="flex aspect-[4/3] min-w-0 flex-1 items-center justify-center rounded-[1.25rem] border-2 border-dashed border-slate-200 bg-white/30 text-xl font-black text-slate-200 sm:w-24 sm:flex-none sm:rounded-[2rem] sm:text-2xl md:w-32"
               >
                 ?
               </motion.div>

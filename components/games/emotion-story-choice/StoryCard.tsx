@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Story } from "@/types/games/emotion-story-choice";
+import { AnimatePresence, motion } from "framer-motion";
+import type { Story } from "@/types/games/emotion-story-choice";
 
 type StoryCardProps = {
   story: Story;
@@ -9,40 +9,32 @@ type StoryCardProps = {
 
 export function StoryCard({ story }: StoryCardProps) {
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="w-full">
       <AnimatePresence mode="wait">
         <motion.div
           key={story.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.8 }}
-          className="w-full flex flex-col items-center gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35 }}
+          className="grid items-center gap-4 md:grid-cols-[220px_minmax(0,1fr)] md:gap-6"
         >
-          {/* Row 2: Illustration Area - Compact but clear */}
-          <div className="h-28 sm:h-32 flex items-center justify-center text-7xl sm:text-8xl">
-            <motion.span
-              key={story.illustration}
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.8 }}
+          <div className="mx-auto flex h-[170px] w-full max-w-[220px] items-center justify-center rounded-[2rem] bg-gradient-to-br from-orange-50 via-amber-50 to-white px-6 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_14px_40px_rgba(251,146,60,0.08)] sm:h-[190px] md:mx-0 md:h-[210px] md:max-w-none">
+            <span
+              aria-hidden="true"
+              className="text-[5.5rem] leading-none sm:text-[6rem] md:text-[6.5rem]"
             >
               {story.illustration}
-            </motion.span>
+            </span>
           </div>
 
-          {/* Row 3: Story Text Content - Focused */}
-          <div className="px-6 text-center space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-3 text-center md:mx-0 md:items-start md:text-left">
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-orange-500">
+              Read the story
+            </p>
+            <h2 className="max-w-[18ch] text-balance text-2xl font-black leading-tight text-slate-900 sm:text-3xl md:text-[2.2rem]">
               {story.situation}
             </h2>
-          </div>
-
-          {/* Row 4: Question */}
-          <div className="pt-2">
-            <span className="px-6 py-2 rounded-full bg-slate-100 text-slate-500 font-black text-xs uppercase tracking-[0.2em]">
-              How do they feel?
-            </span>
           </div>
         </motion.div>
       </AnimatePresence>
