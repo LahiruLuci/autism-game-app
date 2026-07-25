@@ -1,0 +1,19 @@
+
+> game-app@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.56.1:3000
+- Environments: .env.local
+✓ Ready in 1016ms
+
+○ Compiling /games/[childId]/emotion-story-choice ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-story-choice?level=1 200 in 12.6s (next.js: 12.1s, application-code: 486ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-story-choice?level=1 200 in 2.3s (next.js: 1090ms, application-code: 1200ms)
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30/emotion-story-choice?level=1 200 in 1098ms (next.js: 716ms, application-code: 381ms)
+○ Compiling /game-result/[sessionId] ...
+ GET /game-result/57 200 in 9.6s (next.js: 9.5s, application-code: 125ms)
+ GET /game-result/57 200 in 584ms (next.js: 512ms, application-code: 72ms)
+○ Compiling /games/[childId] ...
+ GET /games/63c0e6ca-7405-4d1c-b719-c04341064c30 200 in 12.5s (next.js: 12.3s, application-code: 148ms)

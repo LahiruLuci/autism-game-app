@@ -8,37 +8,37 @@ interface CountingDisplayAreaProps {
 }
 
 export function CountingDisplayArea({ emoji, count }: CountingDisplayAreaProps) {
-  // Logic to determine grid layout based on count
   const getGridLayout = () => {
-    if (count <= 5) return "flex flex-wrap justify-center gap-6";
-    if (count <= 10) return "grid grid-cols-5 gap-4";
-    return "grid grid-cols-5 gap-3"; // For level 3 (up to 15)
+    if (count <= 5) return "flex flex-wrap justify-center gap-4 sm:gap-5";
+    if (count <= 10) return "grid grid-cols-5 gap-3 sm:gap-4";
+    return "grid grid-cols-5 gap-2 sm:gap-3";
   };
 
   return (
     <motion.div
       key={`${emoji}-${count}`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="w-full max-w-2xl mx-auto"
+      initial={{ opacity: 0, y: 16, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="mx-auto w-full max-w-5xl"
     >
-      <div className="bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/80 p-10 sm:p-14 shadow-premium flex flex-col items-center justify-center space-y-10 min-h-[300px]">
+      <div className="flex min-h-[250px] flex-col items-center justify-center gap-7 rounded-[2.5rem] border border-white/80 bg-white/80 p-6 text-center shadow-[0_22px_58px_rgba(34,211,238,0.11)] backdrop-blur-xl sm:min-h-[290px] sm:p-8 lg:p-10">
         <div className={getGridLayout()}>
           {Array.from({ length: count }).map((_, i) => (
             <motion.span
               key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="text-5xl sm:text-6xl drop-shadow-sm select-none"
+              initial={{ opacity: 0, y: 12, scale: 0.88 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.35, delay: i * 0.04, ease: "easeOut" }}
+              className="select-none rounded-2xl bg-white/60 px-2 py-1 text-4xl drop-shadow-sm sm:text-5xl lg:text-6xl"
             >
               {emoji}
             </motion.span>
           ))}
         </div>
-        
-        <div className="pt-4">
-          <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-xs">
+
+        <div className="rounded-full border border-cyan-100 bg-white/75 px-6 py-2 shadow-[0_10px_22px_rgba(34,211,238,0.08)]">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
             How many are there?
           </p>
         </div>

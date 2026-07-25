@@ -11,7 +11,7 @@ import { playGameSound } from "@/lib/game-sounds";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
-import { CalmBackground } from "@/components/ui/CalmBackground";
+import { CountingAtmosphere } from "@/components/games/count-the-objects/CountingAtmosphere";
 
 // Components
 import { CountingGameHeader } from "@/components/games/count-the-objects/CountingGameHeader";
@@ -215,11 +215,8 @@ export default function CountTheObjectsPage() {
   }
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
-      <CalmBackground />
-
-      {/* Dynamic Themed Background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-cyan-50 via-blue-50/20 to-violet-50/20 opacity-60" />
+    <main className="relative flex min-h-screen flex-col overflow-x-hidden bg-[#f0fdff] pb-24 sm:pb-10">
+      <CountingAtmosphere />
 
       <CountingGameHeader
         childId={params.childId}
@@ -227,9 +224,9 @@ export default function CountTheObjectsPage() {
         level={level}
       />
 
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex flex-1 flex-col px-4 sm:px-6 lg:px-8">
         {gameState === "playing" && questions.length > 0 && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
+          <div className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col items-center justify-center gap-5 rounded-[2.75rem] border border-white/80 bg-white/75 p-4 shadow-[0_26px_74px_rgba(34,211,238,0.12)] backdrop-blur-xl sm:p-6 lg:gap-6 lg:p-8">
             <div className="hidden sm:block">
               <MascotFeedbackBar feedbackType={feedback.type} />
             </div>
@@ -239,7 +236,7 @@ export default function CountTheObjectsPage() {
               count={questions[currentRound].count}
             />
 
-            <div className="w-full space-y-12">
+            <div className="w-full space-y-5">
               <NumberChoiceGrid
                 options={questions[currentRound].options}
                 onSelect={handleSelectAnswer}
@@ -253,7 +250,7 @@ export default function CountTheObjectsPage() {
             </div>
 
             <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:hidden">
-              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-cyan-100 bg-white px-4 py-3 text-center shadow-lg">
+              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-cyan-100 bg-white/90 px-4 py-3 text-center shadow-[0_16px_36px_rgba(15,23,42,0.14)] backdrop-blur-md">
                 <p className="text-sm font-black leading-snug text-slate-800">{mobileMascotMessage}</p>
               </div>
               <LumiMascot
@@ -274,9 +271,7 @@ export default function CountTheObjectsPage() {
         {gameState === "completed" && (
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="w-full max-w-xl bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/80 p-12 sm:p-20 shadow-premium text-center space-y-10">
-              <div className="w-24 h-24 rounded-full bg-cyan-100 flex items-center justify-center text-5xl mx-auto shadow-sm">
-                🔢
-              </div>
+              <div className="w-24 h-24 rounded-full bg-cyan-100 flex items-center justify-center text-5xl mx-auto shadow-sm">{"\uD83D\uDD22"}</div>
               <div className="space-y-4">
                 <h2 className="text-4xl font-black text-slate-900 leading-tight">Great Counting!</h2>
                 {saveError ? (

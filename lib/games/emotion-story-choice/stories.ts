@@ -162,7 +162,7 @@ export const EMOTION_STORIES: Story[] = [
   {
     id: "s3-5",
     level: 3,
-    situation: "A child sees a big friendly dog barking.",
+    situation: "A child sees a big dog barking.",
     illustration: "🐕",
     correctEmotion: "scared",
     options: ["happy", "sad", "angry", "surprised", "scared"],

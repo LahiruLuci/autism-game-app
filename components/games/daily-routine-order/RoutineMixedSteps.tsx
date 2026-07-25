@@ -12,14 +12,14 @@ interface RoutineMixedStepsProps {
 
 export function RoutineMixedSteps({ steps, selectedIds, onSelect, disabled }: RoutineMixedStepsProps) {
   return (
-    <div className="w-full space-y-6">
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-slate-300" />
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Available Steps</h3>
+    <div className="w-full space-y-4">
+      <div className="flex items-center justify-center gap-2 sm:justify-start">
+        <span className="h-2 w-2 rounded-full bg-amber-300" />
+        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Choose The Steps</h3>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:flex md:flex-wrap md:justify-center">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:flex lg:flex-wrap lg:justify-center lg:gap-5">
         {steps.map((step) => (
-          <div key={step.id} className="md:w-36 lg:w-40">
+          <div key={step.id} className="lg:w-36 xl:w-40">
             <RoutineStepCard
               step={step}
               onClick={() => onSelect(step)}

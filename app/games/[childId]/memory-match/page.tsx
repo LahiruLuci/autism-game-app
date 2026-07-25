@@ -12,7 +12,7 @@ import { playGameSound } from "@/lib/game-sounds";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
-import { CalmBackground } from "@/components/ui/CalmBackground";
+import { MemoryAtmosphere } from "@/components/games/memory-match/MemoryAtmosphere";
 
 import { MemoryGameHeader } from "@/components/games/memory-match/MemoryGameHeader";
 import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
@@ -217,8 +217,8 @@ export default function MemoryMatchPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-50">
-      <CalmBackground />
+    <main className="relative min-h-screen overflow-x-hidden bg-[#f5fbff]">
+      <MemoryAtmosphere />
 
       {gameState !== "start" && (
         <MemoryGameHeader
@@ -229,7 +229,7 @@ export default function MemoryMatchPage() {
         />
       )}
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-[1220px] px-4 pb-24 sm:px-6 lg:px-8">
         {gameState === "start" && (
           <GameIntroScreen
             title="Ready to Match?"
@@ -242,14 +242,14 @@ export default function MemoryMatchPage() {
             onBack={() => router.push(`/games/${params.childId}`)}
             accentColor="orange"
             chips={[
-              { icon: "🧠", text: "Boost Memory" },
-              { icon: "🌟", text: "Practice Focus" }
+              { icon: "\uD83E\uDDE0", text: "Boost Memory" },
+              { icon: "\uD83C\uDF1F", text: "Practice Focus" }
             ]}
           />
         )}
 
         {gameState === "playing" && (
-          <div className="space-y-6 py-6 lg:space-y-8 lg:py-8">
+          <div className="mx-auto space-y-5 rounded-[2.5rem] border border-white/80 bg-white/78 p-4 shadow-[0_24px_70px_rgba(37,99,235,0.12)] backdrop-blur-xl sm:p-5 lg:space-y-6 lg:p-7">
             <MemoryCardGrid
               cards={cards}
               onCardClick={handleCardClick}
@@ -266,7 +266,7 @@ export default function MemoryMatchPage() {
 
         {gameState === "completed" && (
           <div className="flex flex-col items-center justify-center space-y-6 py-20 text-center">
-            <h2 className="text-4xl font-black text-slate-900">Wonderful Work! 🌟</h2>
+            <h2 className="text-4xl font-black text-slate-900">Wonderful Work! {"\uD83C\uDF1F"}</h2>
             <p className="text-xl font-medium text-slate-600">Saving your journey stats...</p>
           </div>
         )}
@@ -282,7 +282,7 @@ export default function MemoryMatchPage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.92, y: 8 }}
                 transition={{ duration: 0.25 }}
-                className="absolute bottom-24 right-0 w-[170px] rounded-[1.5rem] bg-[#EFF6FF] px-4 py-3 text-sm font-black leading-snug text-slate-800 shadow-[0_16px_36px_rgba(15,23,42,0.16)] ring-1 ring-blue-100 lg:bottom-32 lg:w-[210px] lg:text-base"
+                className="absolute bottom-24 right-0 w-[180px] rounded-[1.5rem] border border-sky-100 bg-white/90 px-4 py-3 text-sm font-black leading-snug text-slate-800 shadow-[0_16px_36px_rgba(15,23,42,0.16)] backdrop-blur-md ring-1 ring-blue-100 lg:bottom-32 lg:w-[230px] lg:text-base"
               >
                 {floatingMessage}
               </motion.div>
@@ -303,5 +303,3 @@ export default function MemoryMatchPage() {
     </main>
   );
 }
-
-

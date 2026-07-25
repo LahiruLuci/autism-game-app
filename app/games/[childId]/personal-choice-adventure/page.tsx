@@ -11,7 +11,7 @@ import { playGameSound } from "@/lib/game-sounds";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
-import { CalmBackground } from "@/components/ui/CalmBackground";
+import { ChoiceAtmosphere } from "@/components/games/personal-choice-adventure/ChoiceAtmosphere";
 
 // Components
 import { ChoiceAdventureHeader } from "@/components/games/personal-choice-adventure/ChoiceAdventureHeader";
@@ -227,8 +227,8 @@ export default function PersonalChoiceAdventurePage() {
   }
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-slate-50 flex flex-col pb-20">
-      <CalmBackground />
+    <main className="relative flex min-h-screen flex-col overflow-x-hidden bg-[#fff8fb] pb-24 sm:pb-10">
+      <ChoiceAtmosphere />
 
       <ChoiceAdventureHeader
         childId={params.childId}
@@ -236,7 +236,7 @@ export default function PersonalChoiceAdventurePage() {
         level={level}
       />
 
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex flex-1 flex-col px-4 sm:px-6 lg:px-8">
         {gameState === "start" && (
           <GameIntroScreen
             title="Your Adventure Choice!"
@@ -256,7 +256,7 @@ export default function PersonalChoiceAdventurePage() {
         )}
 
         {gameState === "playing" && scenarios.length > 0 && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-8 sm:gap-12">
+          <div className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col items-center justify-center gap-5 rounded-[2.75rem] border border-white/80 bg-white/75 p-4 shadow-[0_26px_74px_rgba(244,114,182,0.12)] backdrop-blur-xl sm:p-6 lg:gap-6 lg:p-8">
             <div className="hidden sm:block">
               <MascotFeedbackBar feedbackType={feedback.type} />
             </div>
@@ -267,7 +267,7 @@ export default function PersonalChoiceAdventurePage() {
               question={scenarios[currentRound].question}
             />
 
-            <div className="w-full space-y-12">
+            <div className="w-full space-y-5">
               <ChoiceCardGrid
                 options={mixedOptions}
                 onSelect={handleSelectChoice}
@@ -281,7 +281,7 @@ export default function PersonalChoiceAdventurePage() {
             </div>
 
             <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:hidden">
-              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-rose-100 bg-white px-4 py-3 text-center shadow-lg">
+              <div className="mb-8 max-w-[180px] rounded-[1.5rem] border border-rose-100 bg-white/90 px-4 py-3 text-center shadow-[0_16px_36px_rgba(15,23,42,0.14)] backdrop-blur-md">
                 <p className="text-sm font-black leading-snug text-slate-800">{mobileMascotMessage}</p>
               </div>
               <LumiMascot

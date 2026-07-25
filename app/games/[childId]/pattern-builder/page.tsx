@@ -11,7 +11,7 @@ import { playGameSound } from "@/lib/game-sounds";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
-import { CalmBackground } from "@/components/ui/CalmBackground";
+import { PatternAtmosphere } from "@/components/games/pattern-builder/PatternAtmosphere";
 
 import { PatternGameHeader } from "@/components/games/pattern-builder/PatternGameHeader";
 import { GameIntroScreen } from "@/components/games/redesign/GameIntroScreen";
@@ -238,8 +238,8 @@ export default function PatternBuilderPage() {
 
   if (gameState === "start") {
     return (
-      <main className="fixed inset-0 overflow-hidden bg-slate-50">
-        <CalmBackground />
+      <main className="fixed inset-0 overflow-hidden bg-[#f6fbff]">
+        <PatternAtmosphere />
         <div className="flex h-full flex-col">
           <PatternGameHeader childId={params.childId} score={currentScore} level={level} />
           <div className="relative z-10 flex min-h-0 flex-1 items-start justify-center px-4 pb-4 sm:px-6 sm:pb-6">
@@ -265,13 +265,13 @@ export default function PatternBuilderPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-slate-50 pb-20 sm:pb-8">
-      <CalmBackground />
+    <main className="relative min-h-screen overflow-x-hidden bg-[#f6fbff] pb-24 sm:pb-10">
+      <PatternAtmosphere />
       <PatternGameHeader childId={params.childId} score={currentScore} level={level} />
 
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6">
+      <div className="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
         {gameState === "playing" && currentQuestion && (
-          <div className="space-y-8 py-6 sm:space-y-12 sm:py-10">
+          <div className="mx-auto space-y-5 rounded-[2.75rem] border border-white/80 bg-white/75 p-4 shadow-[0_26px_74px_rgba(37,99,235,0.12)] backdrop-blur-xl sm:p-6 lg:space-y-6 lg:p-8">
             <PatternSequenceCard
               pattern={currentQuestion.pattern}
               instruction={currentQuestion.instruction}
@@ -286,7 +286,7 @@ export default function PatternBuilderPage() {
             <PatternProgress current={currentRound + 1} total={totalRounds} />
 
             <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:bottom-7 sm:right-7 lg:bottom-10 lg:right-10">
-              <div className="mb-8 max-w-[190px] rounded-[1.5rem] border border-blue-100 bg-white px-4 py-3 text-center shadow-lg sm:mb-10 sm:max-w-[230px] sm:px-5 sm:py-4 lg:mb-12 lg:max-w-[250px]">
+              <div className="mb-8 max-w-[200px] rounded-[1.5rem] border border-blue-100 bg-white/90 px-4 py-3 text-center shadow-[0_16px_36px_rgba(15,23,42,0.14)] backdrop-blur-md sm:mb-10 sm:max-w-[240px] sm:px-5 sm:py-4 lg:mb-12 lg:max-w-[260px]">
                 <p className="text-sm font-black leading-snug text-slate-800 sm:text-base">{mobileMascotMessage}</p>
               </div>
               <LumiMascot

@@ -9,6 +9,7 @@ export type AuthErrorCode =
   | "register_failed"
   | "parent_profile_forbidden"
   | "parent_profile_failed"
+  | "auth_connection_failed"
   | "login_failed";
 
 export class AppAuthError extends Error {
@@ -46,6 +47,10 @@ function getAuthErrorCode(error: { code?: string; message: string }) {
 
   if (code === "email_provider_disabled") {
     return "email_provider_disabled";
+  }
+
+  if (message.includes("failed to fetch") || message.includes("network")) {
+    return "auth_connection_failed";
   }
 
   return null;

@@ -17,6 +17,8 @@ const emailProviderDisabledMessage =
   "Email and password login is not enabled for this project.";
 const parentProfilePermissionMessage =
   "You are logged in, but your parent profile could not be prepared. Please check the parents table access policy.";
+const authConnectionMessage =
+  "We could not connect to Supabase. Please check your database URL, anon key, and internet connection.";
 
 export function LoginForm() {
   const router = useRouter();
@@ -56,6 +58,10 @@ export function LoginForm() {
 
         if (error.code === "email_provider_disabled") {
           message = emailProviderDisabledMessage;
+        }
+
+        if (error.code === "auth_connection_failed") {
+          message = authConnectionMessage;
         }
 
         if (

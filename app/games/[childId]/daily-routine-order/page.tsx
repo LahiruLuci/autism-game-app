@@ -11,8 +11,7 @@ import { playGameSound } from "@/lib/game-sounds";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 import { CalmCompletionScreen } from "@/components/games/CalmCompletionScreen";
-import { CalmBackground } from "@/components/ui/CalmBackground";
-import { Button } from "@/components/ui/Button";
+import { RoutineAtmosphere } from "@/components/games/daily-routine-order/RoutineAtmosphere";
 import { Undo2, CheckCircle2 } from "lucide-react";
 
 // Routine Order Components
@@ -252,8 +251,8 @@ export default function DailyRoutineOrderPage() {
   }
 
   return (
-    <main className="daily-routine-page min-h-screen relative overflow-hidden bg-slate-50 pb-20">
-      <CalmBackground />
+    <main className="daily-routine-page relative min-h-screen overflow-x-hidden bg-[#fffaf0] pb-24 sm:pb-10">
+      <RoutineAtmosphere />
 
       <RoutineGameHeader
         childId={params.childId}
@@ -261,7 +260,7 @@ export default function DailyRoutineOrderPage() {
         level={level}
       />
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
+      <div className="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
         {gameState === "start" && (
           <GameIntroScreen
             title="What Happens First?"
@@ -274,16 +273,16 @@ export default function DailyRoutineOrderPage() {
             onBack={() => router.push(`/games/${params.childId}`)}
             accentColor="orange"
             chips={[
-              { icon: "⭐", text: "Learn Order" },
-              { icon: "🌞", text: "Daily Skills" }
+              { icon: "\u2B50", text: "Learn Order" },
+              { icon: "\uD83C\uDF1E", text: "Daily Skills" }
             ]}
           />
         )}
 
         {gameState === "playing" && currentRoutine && (
-          <div className="space-y-12 py-6">
+          <div className="mx-auto space-y-5 rounded-[2.75rem] border border-white/80 bg-white/75 p-4 shadow-[0_26px_74px_rgba(245,158,11,0.13)] backdrop-blur-xl sm:p-6 lg:space-y-6 lg:p-8">
             <div className="fixed bottom-4 right-4 z-30 flex items-end gap-2 sm:bottom-7 sm:right-7 lg:bottom-10 lg:right-10">
-              <div className="mb-8 max-w-[190px] rounded-[1.5rem] border border-amber-100 bg-white px-4 py-3 text-center shadow-lg sm:mb-10 sm:max-w-[230px] sm:px-5 sm:py-4 lg:mb-12 lg:max-w-[250px]">
+              <div className="mb-8 max-w-[190px] rounded-[1.5rem] border border-amber-100 bg-white/90 px-4 py-3 text-center shadow-[0_16px_36px_rgba(15,23,42,0.14)] backdrop-blur-md sm:mb-10 sm:max-w-[230px] sm:px-5 sm:py-4 lg:mb-12 lg:max-w-[250px]">
                 <p className="text-sm font-black leading-snug text-slate-800 sm:text-base">{floatingMascotMessage}</p>
               </div>
               <LumiMascot
@@ -293,7 +292,7 @@ export default function DailyRoutineOrderPage() {
               />
             </div>
 
-            <div className="text-center space-y-2">
+            <div className="mx-auto max-w-3xl space-y-2 rounded-[2rem] border border-white/70 bg-white/60 px-5 py-4 text-center shadow-[0_12px_32px_rgba(245,158,11,0.08)] backdrop-blur-md">
               <h2 className="text-3xl font-black text-slate-900 tracking-tight">
                 {currentRoutine.title}
               </h2>
@@ -316,7 +315,7 @@ export default function DailyRoutineOrderPage() {
               <button
                 disabled={isAnswered || selectedSteps.length === 0}
                 onClick={handleUndo}
-                className="w-full sm:w-auto rounded-full px-8 py-6 h-auto font-black uppercase tracking-widest text-xs border-2 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="flex h-auto w-full items-center justify-center gap-2 rounded-full border border-white/80 bg-white/90 px-8 py-5 text-xs font-black uppercase tracking-widest text-slate-600 shadow-[0_12px_28px_rgba(15,23,42,0.08)] transition-all hover:-translate-y-0.5 hover:bg-amber-50 disabled:opacity-50 sm:w-auto"
               >
                 <Undo2 size={18} />
                 Undo Step
@@ -325,7 +324,7 @@ export default function DailyRoutineOrderPage() {
               <button
                 disabled={isAnswered || selectedSteps.length !== currentRoutine.steps.length}
                 onClick={handleCheckOrder}
-                className="w-full sm:w-auto rounded-full px-10 py-6 h-auto font-black uppercase tracking-widest text-xs bg-slate-900 text-white shadow-xl shadow-slate-200 hover:bg-slate-800 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="flex h-auto w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-10 py-5 text-xs font-black uppercase tracking-widest text-white shadow-[0_16px_34px_rgba(245,158,11,0.22)] transition-all hover:-translate-y-0.5 hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 sm:w-auto"
               >
                 <CheckCircle2 size={18} />
                 Check My Order
@@ -341,7 +340,7 @@ export default function DailyRoutineOrderPage() {
 
         {gameState === "completed" && (
           <div className="flex flex-col items-center justify-center py-32 text-center space-y-8 bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/80 shadow-premium">
-            <div className="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center text-4xl">🌞</div>
+            <div className="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center text-4xl">{"\uD83C\uDF1E"}</div>
             <div className="space-y-4 max-w-md mx-auto">
               <h2 className="text-4xl font-black text-slate-900">Great Job!</h2>
               {saveError ? (
